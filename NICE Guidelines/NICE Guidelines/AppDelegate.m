@@ -3,7 +3,7 @@
 //  NICE Guidelines
 //
 //  Created by Colin Wren on 31/07/2012.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Open Healthcare UK. All rights reserved.
 //
 
 #import "AppDelegate.h"
@@ -40,6 +40,8 @@
         
         DetailViewController *detailViewController = [[[DetailViewController alloc] initWithNibName:@"DetailViewController_iPad" bundle:nil] autorelease];
         UINavigationController *detailNavigationController = [[[UINavigationController alloc] initWithRootViewController:detailViewController] autorelease];
+        
+        masterViewController.actuallyworksDetail = detailViewController;
     	
         self.splitViewController = [[[UISplitViewController alloc] init] autorelease];
         self.splitViewController.delegate = detailViewController;

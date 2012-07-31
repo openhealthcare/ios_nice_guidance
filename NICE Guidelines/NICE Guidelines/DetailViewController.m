@@ -3,7 +3,7 @@
 //  NICE Guidelines
 //
 //  Created by Colin Wren on 31/07/2012.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Open Healthcare UK. All rights reserved.
 //
 
 #import "DetailViewController.h"
@@ -45,11 +45,14 @@
 - (void)configureView
 {
     // Update the user interface for the detail item.
-
     if (self.detailItem) {
         //self.detailDescriptionLabel.text = [self.detailItem description];
         Guidelines *guideline = (Guidelines *)self.detailItem;
+        
         self.navigationItem.title = guideline.title;
+        
+        
+        
         url = [[NSURL alloc] initWithString:guideline.url];
         NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
         [web loadRequest:request];
@@ -69,9 +72,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
-  
-    
-    
     
     UIBarButtonItem *favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleBordered target:self action:@selector(favourite)];
     

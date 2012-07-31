@@ -3,7 +3,7 @@
 //  NICE Guidelines
 //
 //  Created by Colin Wren on 31/07/2012.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Open Healthcare UK. All rights reserved.
 //
 
 #import "MasterViewController.h"
@@ -13,7 +13,7 @@
 @implementation MasterViewController
 
 @synthesize detailViewController = _detailViewController;
-@synthesize detailObject;
+@synthesize detailObject, actuallyworksDetail;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -135,7 +135,8 @@
         [self.detailViewController setDetailItem:detailObject];
         [self.navigationController pushViewController:self.detailViewController animated:YES];
     }else{
-        [self.detailViewController setDetailItem:detailObject];
+        [self.actuallyworksDetail setDetailItem:detailObject];
+        
     }
 }
 
