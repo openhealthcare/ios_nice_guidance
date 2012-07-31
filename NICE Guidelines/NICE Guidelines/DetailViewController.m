@@ -76,10 +76,10 @@
 
     NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
 
-    if([[UIDevice currentDevice] model] == @"iPad"){
+    if([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]){
         [self.navigationItem setRightBarButtonItems:buttonArray];
     }
-    if([[UIDevice currentDevice] model] == @"iPhone"){
+    if([[[UIDevice currentDevice] model] hasPrefix:@"iPhone"]){
         [bottomBar setItems:buttonArray];
     }
 }
