@@ -1,0 +1,20 @@
+//
+//  Guidelines.h
+//  NICE Guidelines
+//
+//  Created by Colin Wren on 31/07/2012.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface Guidelines : NSObject
+
+@property(nonatomic, strong)NSString *title;
+@property(nonatomic, strong)NSString *url;
+@property(nonatomic, strong)NSString *category;
+@property(nonatomic, strong)NSString *code;
+@property(nonatomic, strong)NSString *subcategory;
+
+
+@end

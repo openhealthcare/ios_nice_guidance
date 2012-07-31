@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Guidelines.h"
+#import "MasterViewController.h"
 
 @interface DetailViewController : UIViewController <UISplitViewControllerDelegate>{
     IBOutlet UIWebView *web;
@@ -15,7 +17,6 @@
 }
 
 @property (strong, nonatomic) id detailItem;
-@property (strong, nonatomic) NSString *itemTitle;
 
 -(void)favourite;
 -(void)share;

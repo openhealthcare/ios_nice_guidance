@@ -13,6 +13,7 @@
 @implementation MasterViewController
 
 @synthesize detailViewController = _detailViewController;
+@synthesize detailObject;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -95,7 +96,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return [self.loadMenu count];
 }
 
 // Customize the appearance of table view cells.
@@ -110,66 +111,57 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
     }
-    if(indexPath.row == 0){
-    // Configure the cell.
-    cell.textLabel.text = NSLocalizedString(@"Detail", @"Detail");
+        // Configure the cell.
+    Guidelines *cellguide = [self.loadMenu objectAtIndex:indexPath.row];
+    cell.textLabel.text = cellguide.title;
     return cell;
-    }else{
-        cell.textLabel.text = NSLocalizedString(@"Test", @"Test");
-        return cell;
-    }
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source.
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    Guidelines *selectedGuideline = (Guidelines *)[menuItems objectAtIndex:indexPath.row];
+    
+    detailObject = selectedGuideline;
+    
+
+    
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    if (!self.detailViewController) {
 	        self.detailViewController = [[[DetailViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil] autorelease];
-            
 	    }
-        self.detailViewController.itemTitle = @"Balls";
+        [self.detailViewController setDetailItem:detailObject];
         [self.navigationController pushViewController:self.detailViewController animated:YES];
+    }else{
+        [self.detailViewController setDetailItem:detailObject];
     }
 }
 
-
+-(NSArray *)loadMenu{
+    NSMutableArray *menuData = [[NSMutableArray alloc] init];
+    Guidelines *guideline = [[Guidelines alloc] init];
+    
+    guideline.title = @"Advanced breast cancer";
+    guideline.url = @"http://www.nice.org.uk/nicemedia/live/11778/43308/43308.pdf";
+    guideline.category = @"Cancer";
+    guideline.code = @"CG81";
+    guideline.subcategory = @"Breast cancer";
+    [menuData addObject:guideline];
+    guideline = nil;
+    
+    guideline = [[Guidelines alloc] init];
+    guideline.title = @"Early and locally advanced breast cancer";
+    guideline.url= @"http://www.nice.org.uk/nicemedia/live/12132/43314/43314.pdf";
+    guideline.category = @"Cancer";
+    guideline.code=@"CG80";
+    guideline.subcategory = @"Breast cancer";
+    [menuData addObject:guideline];
+    guideline = nil;
+    
+    menuItems = [[NSArray alloc] initWithArray:(NSArray *)menuData];
+    return menuItems;
+}
 
 @end

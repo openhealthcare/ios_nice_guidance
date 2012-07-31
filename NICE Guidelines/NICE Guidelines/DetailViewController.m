@@ -16,13 +16,11 @@
 @implementation DetailViewController
 
 @synthesize detailItem = _detailItem;
-@synthesize itemTitle = _itemTitle;
 @synthesize masterPopoverController = _masterPopoverController;
 
 - (void)dealloc
 {
     [_detailItem release];
-    [_itemTitle release];
     [_masterPopoverController release];
     [super dealloc];
 }
@@ -50,6 +48,11 @@
 
     if (self.detailItem) {
         //self.detailDescriptionLabel.text = [self.detailItem description];
+        Guidelines *guideline = (Guidelines *)self.detailItem;
+        self.navigationItem.title = guideline.title;
+        url = [[NSURL alloc] initWithString:guideline.url];
+        NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
+        [web loadRequest:request];
     }
 }
 
@@ -66,9 +69,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
-    url = [[[NSURL alloc] initWithString:@"http://www.nice.org.uk/nicemedia/live/13561/56015/56015.pdf"] autorelease];
-    NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
-    [web loadRequest:request];
+  
+    
+    
     
     UIBarButtonItem *favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleBordered target:self action:@selector(favourite)];
     
@@ -127,7 +130,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"View PDF", @"View PDF");
+        //self.title = NSLocalizedString(@"View PDF", @"View PDF");
     }
     return self;
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7E620BAC15C874BA002CE045 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7E620BAB15C874BA002CE045 /* Settings.bundle */; };
+		7E620BAF15C88A64002CE045 /* Guidelines.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E620BAE15C88A64002CE045 /* Guidelines.m */; };
 		7EE1AB8A15C849C6009DF75B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8915C849C6009DF75B /* UIKit.framework */; };
 		7EE1AB8C15C849C6009DF75B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8B15C849C6009DF75B /* Foundation.framework */; };
 		7EE1AB8E15C849C6009DF75B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8D15C849C6009DF75B /* CoreGraphics.framework */; };
@@ -24,6 +25,8 @@
 
 /* Begin PBXFileReference section */
 		7E620BAB15C874BA002CE045 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		7E620BAD15C88A64002CE045 /* Guidelines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Guidelines.h; sourceTree = "<group>"; };
+		7E620BAE15C88A64002CE045 /* Guidelines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Guidelines.m; sourceTree = "<group>"; };
 		7EE1AB8515C849C6009DF75B /* NICE Guidelines.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NICE Guidelines.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EE1AB8915C849C6009DF75B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7EE1AB8B15C849C6009DF75B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -93,6 +96,8 @@
 				7EE1AB9915C849C6009DF75B /* AppDelegate.m */,
 				7EE1AB9B15C849C6009DF75B /* MasterViewController.h */,
 				7EE1AB9C15C849C6009DF75B /* MasterViewController.m */,
+				7E620BAD15C88A64002CE045 /* Guidelines.h */,
+				7E620BAE15C88A64002CE045 /* Guidelines.m */,
 				7EE1AB9E15C849C6009DF75B /* DetailViewController.h */,
 				7EE1AB9F15C849C6009DF75B /* DetailViewController.m */,
 				7EE1ABA115C849C6009DF75B /* MasterViewController_iPhone.xib */,
@@ -185,6 +190,7 @@
 				7EE1AB9A15C849C6009DF75B /* AppDelegate.m in Sources */,
 				7EE1AB9D15C849C6009DF75B /* MasterViewController.m in Sources */,
 				7EE1ABA015C849C6009DF75B /* DetailViewController.m in Sources */,
+				7E620BAF15C88A64002CE045 /* Guidelines.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
