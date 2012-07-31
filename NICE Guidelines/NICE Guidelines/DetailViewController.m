@@ -68,11 +68,11 @@
     NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
     [web loadRequest:request];
     
-    UIBarButtonItem *favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStylePlain target:self action:@selector(favourite)];
+    UIBarButtonItem *favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleBordered target:self action:@selector(favourite)];
     
-    UIBarButtonItem *share = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStylePlain target:self action:@selector(share)];
+    UIBarButtonItem *share = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStyleBordered target:self action:@selector(share)];
     
-    UIBarButtonItem *print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStylePlain target:self action:@selector(print)];
+    UIBarButtonItem *print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleBordered target:self action:@selector(print)];
 
     NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
 

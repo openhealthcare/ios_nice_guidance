@@ -37,7 +37,7 @@
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIWebView" id="189872764">
 						<reference key="NSNextResponder" ref="647120888"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">294</int>
 						<string key="NSFrameSize">{768, 1004}</string>
 						<reference key="NSSuperview" ref="647120888"/>
 						<reference key="NSWindow"/>
