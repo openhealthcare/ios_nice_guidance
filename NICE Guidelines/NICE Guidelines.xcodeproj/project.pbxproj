@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E620BAC15C874BA002CE045 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7E620BAB15C874BA002CE045 /* Settings.bundle */; };
 		7EE1AB8A15C849C6009DF75B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8915C849C6009DF75B /* UIKit.framework */; };
 		7EE1AB8C15C849C6009DF75B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8B15C849C6009DF75B /* Foundation.framework */; };
 		7EE1AB8E15C849C6009DF75B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8D15C849C6009DF75B /* CoreGraphics.framework */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7E620BAB15C874BA002CE045 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		7EE1AB8515C849C6009DF75B /* NICE Guidelines.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NICE Guidelines.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EE1AB8915C849C6009DF75B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7EE1AB8B15C849C6009DF75B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -59,6 +61,7 @@
 		7EE1AB7A15C849C6009DF75B = {
 			isa = PBXGroup;
 			children = (
+				7E620BAB15C874BA002CE045 /* Settings.bundle */,
 				7EE1AB8F15C849C6009DF75B /* NICE Guidelines */,
 				7EE1AB8815C849C6009DF75B /* Frameworks */,
 				7EE1AB8615C849C6009DF75B /* Products */,
@@ -167,6 +170,7 @@
 				7EE1ABA615C849C6009DF75B /* MasterViewController_iPad.xib in Resources */,
 				7EE1ABA915C849C6009DF75B /* DetailViewController_iPhone.xib in Resources */,
 				7EE1ABAC15C849C6009DF75B /* DetailViewController_iPad.xib in Resources */,
+				7E620BAC15C874BA002CE045 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

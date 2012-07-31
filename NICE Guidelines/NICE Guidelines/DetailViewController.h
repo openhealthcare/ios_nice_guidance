@@ -15,6 +15,7 @@
 }
 
 @property (strong, nonatomic) id detailItem;
+@property (strong, nonatomic) NSString *itemTitle;
 
 -(void)favourite;
 -(void)share;

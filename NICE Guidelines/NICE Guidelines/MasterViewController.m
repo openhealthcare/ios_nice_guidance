@@ -95,7 +95,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return 2;
 }
 
 // Customize the appearance of table view cells.
@@ -110,10 +110,14 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
     }
-
+    if(indexPath.row == 0){
     // Configure the cell.
     cell.textLabel.text = NSLocalizedString(@"Detail", @"Detail");
     return cell;
+    }else{
+        cell.textLabel.text = NSLocalizedString(@"Test", @"Test");
+        return cell;
+    }
 }
 
 /*
@@ -159,9 +163,13 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    if (!self.detailViewController) {
 	        self.detailViewController = [[[DetailViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil] autorelease];
+            
 	    }
+        self.detailViewController.itemTitle = @"Balls";
         [self.navigationController pushViewController:self.detailViewController animated:YES];
     }
 }
+
+
 
 @end

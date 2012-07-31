@@ -16,11 +16,13 @@
 @implementation DetailViewController
 
 @synthesize detailItem = _detailItem;
+@synthesize itemTitle = _itemTitle;
 @synthesize masterPopoverController = _masterPopoverController;
 
 - (void)dealloc
 {
     [_detailItem release];
+    [_itemTitle release];
     [_masterPopoverController release];
     [super dealloc];
 }
@@ -76,10 +78,10 @@
 
     NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
 
-    if([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]){
+    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
         [self.navigationItem setRightBarButtonItems:buttonArray];
     }
-    if([[[UIDevice currentDevice] model] hasPrefix:@"iPhone"]){
+    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
         [bottomBar setItems:buttonArray];
     }
 }
