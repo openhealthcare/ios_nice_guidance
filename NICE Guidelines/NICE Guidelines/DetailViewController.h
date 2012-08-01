@@ -16,6 +16,8 @@
     NSURL *url;
     IBOutlet UIToolbar *bottomBar;
     UIBarButtonItem *print;
+    UIBarButtonItem *share;
+    UIBarButtonItem *favourite;
 }
 
 @property (strong, nonatomic) id detailItem;

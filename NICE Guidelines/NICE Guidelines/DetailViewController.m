@@ -74,23 +74,19 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
     
-    
-    UIBarButtonItem *favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleDone target:self action:@selector(favourite:)];
+    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
+        favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleDone target:self action:@selector(favourite:)];
     
 
-    UIBarButtonItem *share = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStyleDone  target:self action:@selector(share:)];
+        share = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStyleDone  target:self action:@selector(share:)];
     
     
-    if([UIPrintInteractionController isPrintingAvailable]){
-        print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleDone  target:self action:@selector(print:)];
-        NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
-        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
+        if([UIPrintInteractionController isPrintingAvailable]){
+            print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleDone  target:self action:@selector(print:)];
+            NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
             [self.navigationItem setRightBarButtonItems:buttonArray];
-        }
-        
-    }else{
-        NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share, nil];
-        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
+        }else{
+            NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share, nil];
             [self.navigationItem setRightBarButtonItems:buttonArray];
         }
     }
@@ -161,11 +157,13 @@
 -(IBAction)favourite:(id)sender{
     //Do favourite thing
     NSLog(@"Favourite");
+    //This will save current PDF to the user's favourite list (stored in prefs)
 }
 
 -(IBAction)share:(id)sender{
     //do Share thing
     NSLog(@"Share");
+    //This will launch an actionsheet with various types of sharing
 }
 
 -(IBAction)print:(id)sender{
