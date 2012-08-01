@@ -53,6 +53,7 @@
         
         
         
+        
         url = [[NSURL alloc] initWithString:guideline.url];
         NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
         [web loadRequest:request];
@@ -73,19 +74,18 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
     
-    UIBarButtonItem *favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleBordered target:self action:@selector(favourite)];
     
-    UIBarButtonItem *share = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStyleBordered target:self action:@selector(share)];
+    UIBarButtonItem *favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleDone target:self action:@selector(favourite:)];
     
-    UIBarButtonItem *print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleBordered target:self action:@selector(print)];
+
+    UIBarButtonItem *share = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStyleDone  target:self action:@selector(share:)];
+    
+    UIBarButtonItem *print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleDone  target:self action:@selector(print:)];
 
     NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
 
     if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
         [self.navigationItem setRightBarButtonItems:buttonArray];
-    }
-    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
-        [bottomBar setItems:buttonArray];
     }
 }
 
@@ -151,15 +151,18 @@
     self.masterPopoverController = nil;
 }
 
--(void)favourite{
+-(IBAction)favourite:(id)sender{
     //Do favourite thing
+    NSLog(@"Favourite");
 }
 
--(void)share{
+-(IBAction)share:(id)sender{
     //do Share thing
+    NSLog(@"Share");
 }
 
--(void)print{
+-(IBAction)print:(id)sender{
     //do print thing
+    NSLog(@"Print");
 }
 @end

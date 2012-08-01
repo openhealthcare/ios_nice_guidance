@@ -19,9 +19,8 @@
 
 @property (strong, nonatomic) id detailItem;
 
-
--(void)favourite;
--(void)share;
--(void)print;
+-(IBAction)favourite:(id)sender;
+-(IBAction)share:(id)sender;
+-(IBAction)print:(id)sender;
 
 @end

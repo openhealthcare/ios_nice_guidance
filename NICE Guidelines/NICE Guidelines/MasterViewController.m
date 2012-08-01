@@ -134,6 +134,7 @@
 	    }
         [self.detailViewController setDetailItem:detailObject];
         [self.navigationController pushViewController:self.detailViewController animated:YES];
+        self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
     }else{
         [self.actuallyworksDetail setDetailItem:detailObject];
         
