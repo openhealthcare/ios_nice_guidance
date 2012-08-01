@@ -11,10 +11,11 @@
 
 @class MasterViewController;
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate, UIPopoverControllerDelegate>{
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate, UIPopoverControllerDelegate, UIPrintInteractionControllerDelegate>{
     IBOutlet UIWebView *web;
     NSURL *url;
     IBOutlet UIToolbar *bottomBar;
+    UIBarButtonItem *print;
 }
 
 @property (strong, nonatomic) id detailItem;

@@ -80,12 +80,19 @@
 
     UIBarButtonItem *share = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStyleDone  target:self action:@selector(share:)];
     
-    UIBarButtonItem *print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleDone  target:self action:@selector(print:)];
-
-    NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
-
-    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
-        [self.navigationItem setRightBarButtonItems:buttonArray];
+    
+    if([UIPrintInteractionController isPrintingAvailable]){
+        print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleDone  target:self action:@selector(print:)];
+        NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
+        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
+            [self.navigationItem setRightBarButtonItems:buttonArray];
+        }
+        
+    }else{
+        NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share, nil];
+        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
+            [self.navigationItem setRightBarButtonItems:buttonArray];
+        }
     }
 }
 
@@ -163,6 +170,32 @@
 
 -(IBAction)print:(id)sender{
     //do print thing
-    NSLog(@"Print");
+    UIPrintInteractionController *controller = [UIPrintInteractionController sharedPrintController];
+    if(!controller){
+        NSLog(@"Couldn't get shared UIPrintInteractionController!");
+        return;
+    }
+    void (^completionHandler)(UIPrintInteractionController *, BOOL, NSError *) =
+    ^(UIPrintInteractionController *printController, BOOL completed, NSError *error) {
+        if(!completed && error){
+            NSLog(@"FAILED! due to error in domain %@ with error code %u",
+                  error.domain, error.code);
+        }
+    };
+    UIPrintInfo *printInfo = [UIPrintInfo printInfo];
+    printInfo.outputType = UIPrintInfoOutputGeneral;
+    printInfo.jobName = [NSString stringWithFormat:@"%@",url];
+    printInfo.duplex = UIPrintInfoDuplexLongEdge;
+    controller.printInfo = printInfo;
+    controller.showsPageRange = YES;
+    
+    UIViewPrintFormatter *viewFormatter = [web viewPrintFormatter];
+    viewFormatter.startPage = 0;
+    controller.printFormatter = viewFormatter;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [controller presentFromBarButtonItem:print animated:YES completionHandler:completionHandler];
+    }else
+        [controller presentAnimated:YES completionHandler:completionHandler];
 }
 @end
