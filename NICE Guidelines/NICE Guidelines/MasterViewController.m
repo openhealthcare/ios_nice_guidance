@@ -49,6 +49,12 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
     }
+    
+    //Check to see if the guidelines exist locally
+    
+    //If they don't then load them
+    
+    //check for updates
 }
 
 - (void)viewDidUnload
@@ -144,23 +150,6 @@
 -(NSArray *)loadMenu{
     menuData = [[NSMutableArray alloc] init];
     
-    /*guideline.title = @"Advanced breast cancer";
-    guideline.url = @"http://www.nice.org.uk/nicemedia/live/11778/43308/43308.pdf";
-    guideline.category = @"Cancer";
-    guideline.code = @"CG81";
-    guideline.subcategory = @"Breast cancer";
-    [menuData addObject:guideline];
-    guideline = nil;
-    
-    guideline = [[Guidelines alloc] init];
-    guideline.title = @"Early and locally advanced breast cancer";
-    guideline.url= @"http://www.nice.org.uk/nicemedia/live/12132/43314/43314.pdf";
-    guideline.category = @"Cancer";
-    guideline.code=@"CG80";
-    guideline.subcategory = @"Breast cancer";
-    [menuData addObject:guideline];
-    guideline = nil;*/
-    
     [self parseXMLFileAtURL:@"http://openhealthcare.org.uk/guidelines.xml"];
     
     menuItems = [[NSArray alloc] initWithArray:(NSArray *)menuData];
@@ -219,7 +208,6 @@
         guideline.category = currentCategory;
         guideline.subcategory = currentSubCat;*/
         
-        NSLog(@"title: %@ url:%@",currentTitle,currentURL);
 		[menuData addObject:guideline];
         
         guideline = nil;
