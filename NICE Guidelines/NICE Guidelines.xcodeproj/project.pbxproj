@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E1E765B15CDD3CA00EAC734 /* Guidelines.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7E1E765915CDD3CA00EAC734 /* Guidelines.xcdatamodeld */; };
 		7E620BAC15C874BA002CE045 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7E620BAB15C874BA002CE045 /* Settings.bundle */; };
 		7E620BAF15C88A64002CE045 /* Guidelines.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E620BAE15C88A64002CE045 /* Guidelines.m */; };
 		7E620BF615C8AD37002CE045 /* 58-bookmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E620BEC15C8AD37002CE045 /* 58-bookmark.png */; };
@@ -37,6 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7E1E765A15CDD3CA00EAC734 /* Guidelines.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Guidelines.xcdatamodel; sourceTree = "<group>"; };
 		7E620BAB15C874BA002CE045 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		7E620BAD15C88A64002CE045 /* Guidelines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Guidelines.h; sourceTree = "<group>"; };
 		7E620BAE15C88A64002CE045 /* Guidelines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Guidelines.m; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				7EE1ABA715C849C6009DF75B /* DetailViewController_iPhone.xib */,
 				7EE1ABAA15C849C6009DF75B /* DetailViewController_iPad.xib */,
 				7EE1AB9015C849C6009DF75B /* Supporting Files */,
+				7E1E765915CDD3CA00EAC734 /* Guidelines.xcdatamodeld */,
 			);
 			path = "NICE Guidelines";
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 				7EE1AB9D15C849C6009DF75B /* MasterViewController.m in Sources */,
 				7EE1ABA015C849C6009DF75B /* DetailViewController.m in Sources */,
 				7E620BAF15C88A64002CE045 /* Guidelines.m in Sources */,
+				7E1E765B15CDD3CA00EAC734 /* Guidelines.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,6 +385,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		7E1E765915CDD3CA00EAC734 /* Guidelines.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				7E1E765A15CDD3CA00EAC734 /* Guidelines.xcdatamodel */,
+			);
+			currentVersion = 7E1E765A15CDD3CA00EAC734 /* Guidelines.xcdatamodel */;
+			path = Guidelines.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 7EE1AB7C15C849C6009DF75B /* Project object */;
 }
