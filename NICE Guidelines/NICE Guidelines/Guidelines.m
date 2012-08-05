@@ -9,5 +9,5 @@
 #import "Guidelines.h"
 
 @implementation Guidelines
-@synthesize title, url, category, code, subcategory;
+@dynamic title, url, category, code, subcategory;
 @end

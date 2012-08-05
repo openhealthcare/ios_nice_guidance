@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Guidelines.h"
 
 @class DetailViewController;
 
@@ -17,12 +16,13 @@
     NSString *currentElement;
     NSMutableString *currentTitle, *currentURL, *currentCategory, *currentCode, *currentSubCat;
     NSMutableArray *menuData;
-    Guidelines *guideline;
 }
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property (strong, nonatomic) DetailViewController *actuallyworksDetail;
 @property (strong, nonatomic)id detailObject;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSArray *menuItems;
 -(NSArray *)loadMenu;
 -(void)parseXMLFileAtURL:(NSString *)URL;
 

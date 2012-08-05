@@ -13,7 +13,7 @@
 @implementation MasterViewController
 
 @synthesize detailViewController = _detailViewController;
-@synthesize detailObject, actuallyworksDetail;
+@synthesize detailObject, actuallyworksDetail, managedObjectContext, menuItems;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,6 +49,16 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
     }
+    
+    NSLog(@"loaded:");
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSLog(@"loaded second");
+    NSError *error;
+    self.menuItems = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
     
     //Check to see if the guidelines exist locally
     
@@ -102,7 +112,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.loadMenu count];
+    return [menuItems count];
 }
 
 // Customize the appearance of table view cells.
@@ -118,7 +128,7 @@
         }
     }
         // Configure the cell.
-    Guidelines *cellguide = [self.loadMenu objectAtIndex:indexPath.row];
+    Guidelines *cellguide = [menuItems objectAtIndex:indexPath.row];
     cell.textLabel.text = cellguide.title;
     return cell;
 }
@@ -128,7 +138,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    Guidelines *selectedGuideline = (Guidelines *)[menuItems objectAtIndex:indexPath.row];
+  /*  Guidelines *selectedGuideline = (Guidelines *)[menuItems objectAtIndex:indexPath.row];
     
     detailObject = selectedGuideline;
     
@@ -144,22 +154,22 @@
     }else{
         [self.actuallyworksDetail setDetailItem:detailObject];
         
-    }
+    }*/
 }
 
 -(NSArray *)loadMenu{
-    menuData = [[NSMutableArray alloc] init];
+   /* menuData = [[NSMutableArray alloc] init];
     
     [self parseXMLFileAtURL:@"http://openhealthcare.org.uk/guidelines.xml"];
     
     menuItems = [[NSArray alloc] initWithArray:(NSArray *)menuData];
-    return menuItems;
+    return menuItems;*/
 }
 
 - (void)parseXMLFileAtURL:(NSString *)URL
 {	
     //you must then convert the path to a proper NSURL or it won't work
-    NSURL *xmlURL = [NSURL URLWithString:URL];
+   /* NSURL *xmlURL = [NSURL URLWithString:URL];
 	
     // here, for some reason you have to use NSClassFromString when trying to alloc NSXMLParser, otherwise you will get an object not found error
     // this may be necessary only for the toolchain
@@ -173,11 +183,11 @@
     [menuParser setShouldReportNamespacePrefixes:NO];
     [menuParser setShouldResolveExternalEntities:NO];
 	
-    [menuParser parse];
+    [menuParser parse];*/
 	
 }
 
-- (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
+/*- (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
 	NSString * errorString = [NSString stringWithFormat:@"Unable to download story feed from web site (Error code %i )", [parseError code]];
 	
 	UIAlertView * errorAlert = [[[UIAlertView alloc] initWithTitle:@"Error loading content" message:errorString delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease];
@@ -192,9 +202,9 @@
 		guideline = [[Guidelines alloc] init];
 		currentTitle = [[NSMutableString alloc] init];
 		currentURL = [[NSMutableString alloc] init];
-		/*currentCategory = [[NSMutableString alloc] init];
+	*/ /*currentCategory = [[NSMutableString alloc] init];
 		currentCode = [[NSMutableString alloc] init];
-        currentSubCat = [[NSMutableString alloc] init];*/
+        currentSubCat = [[NSMutableString alloc] init];*/ /*
 	}
 	
 }
@@ -204,18 +214,18 @@
 		// save values to an item, then store that item into the array...
 		guideline.title = currentTitle;
 		guideline.url = currentURL;
-		/*guideline.code = currentCode;
+	*/	/*guideline.code = currentCode;
         guideline.category = currentCategory;
-        guideline.subcategory = currentSubCat;*/
+        guideline.subcategory = currentSubCat;*/ /*
         
 		[menuData addObject:guideline];
         
         guideline = nil;
         [currentTitle release];
         [currentURL release];
-       /* [currentCode release];
+     */  /* [currentCode release];
         [currentCategory release];
-        [currentSubCat release];*/
+        [currentSubCat release];*/ /*
 	}
 }
 
@@ -229,7 +239,7 @@
 	} else if ([currentElement isEqualToString:@"url"]) {
 		[currentURL appendString:cleanString];
 	}	
-}
+}*/
 
 
 @end

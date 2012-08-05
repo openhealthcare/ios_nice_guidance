@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@interface Guidelines : NSObject
+@interface Guidelines : NSManagedObject
 
 @property(nonatomic, strong)NSString *title;
 @property(nonatomic, strong)NSString *url;

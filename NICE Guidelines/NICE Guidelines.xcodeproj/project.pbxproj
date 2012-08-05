@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7E1E765B15CDD3CA00EAC734 /* Guidelines.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7E1E765915CDD3CA00EAC734 /* Guidelines.xcdatamodeld */; };
+		7E47AA2C15CF09D300F9DD38 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E47AA2B15CF09D300F9DD38 /* CoreData.framework */; };
 		7E620BAC15C874BA002CE045 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7E620BAB15C874BA002CE045 /* Settings.bundle */; };
 		7E620BAF15C88A64002CE045 /* Guidelines.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E620BAE15C88A64002CE045 /* Guidelines.m */; };
 		7E620BF615C8AD37002CE045 /* 58-bookmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E620BEC15C8AD37002CE045 /* 58-bookmark.png */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		7E1E765A15CDD3CA00EAC734 /* Guidelines.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Guidelines.xcdatamodel; sourceTree = "<group>"; };
+		7E47AA2B15CF09D300F9DD38 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		7E620BAB15C874BA002CE045 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		7E620BAD15C88A64002CE045 /* Guidelines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Guidelines.h; sourceTree = "<group>"; };
 		7E620BAE15C88A64002CE045 /* Guidelines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Guidelines.m; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E47AA2C15CF09D300F9DD38 /* CoreData.framework in Frameworks */,
 				7EE1AB8A15C849C6009DF75B /* UIKit.framework in Frameworks */,
 				7EE1AB8C15C849C6009DF75B /* Foundation.framework in Frameworks */,
 				7EE1AB8E15C849C6009DF75B /* CoreGraphics.framework in Frameworks */,
@@ -92,10 +95,12 @@
 		7EE1AB7A15C849C6009DF75B = {
 			isa = PBXGroup;
 			children = (
+				7E47AA2B15CF09D300F9DD38 /* CoreData.framework */,
 				7EED422D15CA05C600F47C2E /* NICE icon iOS 72.png */,
 				7EED422B15CA05A300F47C2E /* appicon@2x.png */,
 				7EED422815CA059C00F47C2E /* appicon.png */,
 				7E620BAB15C874BA002CE045 /* Settings.bundle */,
+				7E1E765915CDD3CA00EAC734 /* Guidelines.xcdatamodeld */,
 				7EE1AB8F15C849C6009DF75B /* NICE Guidelines */,
 				7EE1AB8815C849C6009DF75B /* Frameworks */,
 				7EE1AB8615C849C6009DF75B /* Products */,
@@ -136,7 +141,6 @@
 				7EE1ABA715C849C6009DF75B /* DetailViewController_iPhone.xib */,
 				7EE1ABAA15C849C6009DF75B /* DetailViewController_iPad.xib */,
 				7EE1AB9015C849C6009DF75B /* Supporting Files */,
-				7E1E765915CDD3CA00EAC734 /* Guidelines.xcdatamodeld */,
 			);
 			path = "NICE Guidelines";
 			sourceTree = "<group>";
@@ -393,7 +397,8 @@
 				7E1E765A15CDD3CA00EAC734 /* Guidelines.xcdatamodel */,
 			);
 			currentVersion = 7E1E765A15CDD3CA00EAC734 /* Guidelines.xcdatamodel */;
-			path = Guidelines.xcdatamodeld;
+			name = Guidelines.xcdatamodeld;
+			path = "NICE Guidelines/Guidelines.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
