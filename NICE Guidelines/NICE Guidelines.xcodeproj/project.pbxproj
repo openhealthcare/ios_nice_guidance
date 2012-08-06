@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E1A38EB15D05B3500E7B351 /* Guidelines.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7E1A38EA15D05B3500E7B351 /* Guidelines.sqlite */; };
 		7E1E765B15CDD3CA00EAC734 /* Guidelines.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7E1E765915CDD3CA00EAC734 /* Guidelines.xcdatamodeld */; };
 		7E47AA2C15CF09D300F9DD38 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E47AA2B15CF09D300F9DD38 /* CoreData.framework */; };
 		7E47AA3515CF231900F9DD38 /* Guideline.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E47AA3415CF231900F9DD38 /* Guideline.m */; };
@@ -39,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7E1A38EA15D05B3500E7B351 /* Guidelines.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Guidelines.sqlite; sourceTree = "<group>"; };
 		7E1E765A15CDD3CA00EAC734 /* Guidelines.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Guidelines.xcdatamodel; sourceTree = "<group>"; };
 		7E47AA2B15CF09D300F9DD38 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		7E47AA3315CF231900F9DD38 /* Guideline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Guideline.h; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 		7EE1AB9015C849C6009DF75B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				7E1A38EA15D05B3500E7B351 /* Guidelines.sqlite */,
 				7E620BEC15C8AD37002CE045 /* 58-bookmark.png */,
 				7E620BED15C8AD37002CE045 /* bookmark.png */,
 				7E620BEE15C8AD37002CE045 /* 108-badge.png */,
@@ -235,6 +238,7 @@
 				7EED422915CA059C00F47C2E /* appicon.png in Resources */,
 				7EED422C15CA05A300F47C2E /* appicon@2x.png in Resources */,
 				7EED422E15CA05C600F47C2E /* NICE icon iOS 72.png in Resources */,
+				7E1A38EB15D05B3500E7B351 /* Guidelines.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

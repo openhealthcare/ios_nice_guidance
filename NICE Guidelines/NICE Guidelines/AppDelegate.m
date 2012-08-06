@@ -187,11 +187,28 @@
         return __persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Guidelines.sqlite"];
+    NSString *defaultStorePath = [[NSBundle mainBundle] pathForResource:@"Guidelines" ofType:@"sqlite"];
+    NSString *storePath =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    storePath = [storePath stringByAppendingPathComponent: @"Guidelines.sqlite"];
     
-    NSError *error = nil;
+    NSError *error;
+    if(![[NSFileManager defaultManager] fileExistsAtPath:storePath]){
+        if([[NSFileManager defaultManager] copyItemAtPath:defaultStorePath toPath:storePath error:&error]){
+            NSLog(@"Copied starting data to %@", storePath);
+        }else{
+            NSLog(@"Error copying default DB to %@ (%@)", storePath, error);
+        }
+    }
+    
+    
+    NSURL *storeURL = [NSURL fileURLWithPath:storePath];
+    
     __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error])
+    
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
+    
+    
+    if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error])
     {
         /*
          Replace this implementation with code to handle the error appropriately.
