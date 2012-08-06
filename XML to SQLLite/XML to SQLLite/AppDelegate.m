@@ -27,13 +27,12 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
-    number = 0;
     [self loadInitialData];
 }
 
 -(void)loadInitialData{
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
+    context = [[NSManagedObjectContext alloc] init];
     [context setPersistentStoreCoordinator:self.persistentStoreCoordinator];
     
     
@@ -65,13 +64,6 @@
     element = [elementName copy];
     if([elementName isEqualToString:@"guideline"]){
         
-        number++;
-        [counter setStringValue:[NSString stringWithFormat:@"%i",number]];
-        
-        
-        
-        
-        
         title = [[NSMutableString alloc] init];
         url = [[NSMutableString alloc] init];
         code = [[NSMutableString alloc] init];
@@ -87,19 +79,19 @@
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{ 
     if([elementName isEqualToString:@"guideline"]){
         
-        //Guideline *item = [NSArray arrayWithObjects:title,url, code, category, subcat, nil];
+        Guideline *item = [NSEntityDescription insertNewObjectForEntityForName:@"Guideline" inManagedObjectContext:context]; 
         
-       /* item.title = title;
+        item.title = title;
         item.url = url;
         item.code = code; 
         item.category = category;
-        item.subcategory = subcat;*/
+        item.subcategory = subcat;
         
-       /* [title release];
+        [title release];
         [url release];
         [code release];
         [category release];
-        [subcat release];*/
+        [subcat release];
     }
     
 }

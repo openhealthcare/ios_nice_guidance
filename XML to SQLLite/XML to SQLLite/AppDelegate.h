@@ -12,8 +12,8 @@
     NSXMLParser *parser;
     NSString *element;
     NSMutableString *title, *url, *category, *code, *subcat;
-    IBOutlet NSTextField *counter;
     int number;
+    NSManagedObjectContext *context;
 }
 
 @property (assign) IBOutlet NSWindow *window;
