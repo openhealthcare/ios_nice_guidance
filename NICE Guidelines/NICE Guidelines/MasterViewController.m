@@ -7,7 +7,7 @@
 //
 
 #import "MasterViewController.h"
-
+#import "Guideline.h"
 #import "DetailViewController.h"
 
 @implementation MasterViewController
@@ -47,19 +47,17 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+       // [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
     }
-    
-    NSLog(@"loaded:");
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
+    
     [fetchRequest setEntity:entity];
     
-    NSLog(@"loaded second");
     NSError *error;
     self.menuItems = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    
+    [fetchRequest release];
     //Check to see if the guidelines exist locally
     
     //If they don't then load them
@@ -112,12 +110,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [menuItems count];
+    NSLog(@"number of rows");
+    return [self.menuItems count];
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"pasting the stuff into table");
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -128,7 +128,7 @@
         }
     }
         // Configure the cell.
-    Guidelines *cellguide = [menuItems objectAtIndex:indexPath.row];
+    Guideline *cellguide = [self.menuItems objectAtIndex:indexPath.row];
     cell.textLabel.text = cellguide.title;
     return cell;
 }
@@ -138,7 +138,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-  /*  Guidelines *selectedGuideline = (Guidelines *)[menuItems objectAtIndex:indexPath.row];
+    Guideline *selectedGuideline = (Guideline *)[menuItems objectAtIndex:indexPath.row];
     
     detailObject = selectedGuideline;
     
@@ -154,17 +154,18 @@
     }else{
         [self.actuallyworksDetail setDetailItem:detailObject];
         
-    }*/
+    }
 }
 
--(NSArray *)loadMenu{
+//-(NSArray *)loadMenu{
    /* menuData = [[NSMutableArray alloc] init];
     
     [self parseXMLFileAtURL:@"http://openhealthcare.org.uk/guidelines.xml"];
+    */
     
-    menuItems = [[NSArray alloc] initWithArray:(NSArray *)menuData];
-    return menuItems;*/
-}
+   /* menuItems = [[NSArray alloc] initWithObjects:@"one",@"two",nil];
+    return menuItems;
+}*/
 
 - (void)parseXMLFileAtURL:(NSString *)URL
 {	

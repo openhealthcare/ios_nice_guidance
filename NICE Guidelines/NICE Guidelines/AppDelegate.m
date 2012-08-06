@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 
 #import "MasterViewController.h"
-#import "Guidelines.h"
+#import "Guideline.h"
 #import "DetailViewController.h"
 
 @implementation AppDelegate
@@ -34,28 +34,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
     NSManagedObjectContext *context = [self managedObjectContext];
-    Guidelines *guideline = [NSEntityDescription insertNewObjectForEntityForName:@"Guideline" inManagedObjectContext:context];
+    Guideline *guideline = [NSEntityDescription insertNewObjectForEntityForName:@"Guideline" inManagedObjectContext:context];
     guideline.title = @"Hypertension";
     guideline.url = @"http://www.nice.org.uk/nicemedia/live/13561/56015/56015.pdf";
     guideline.category = @"g";
     guideline.code = @"CG127";
     guideline.subcategory = @"g";
+
     
     NSError *error;
     if(![context save:&error]){
-        NSLog(@"Error %@",[error localizedDescription]);
+        NSLog(@"Error %@", [error localizedDescription]);
     }
-    
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *guidelines = [NSEntityDescription entityForName:@"Guidelines" inManagedObjectContext:context];
-    [request setEntity:guidelines];
-    NSArray *objects = [context executeFetchRequest:request error:&error];
-    for(Guidelines *obj in objects){
-        NSLog(@"Title: %@", obj.title);
-    }
-    
+
     
     
     
@@ -67,6 +59,7 @@
         MasterViewController *masterViewController = [[[MasterViewController alloc] initWithNibName:@"MasterViewController_iPhone" bundle:nil] autorelease];
         self.navigationController = [[[UINavigationController alloc] initWithRootViewController:masterViewController] autorelease];
         self.window.rootViewController = self.navigationController;
+        masterViewController.managedObjectContext = self.managedObjectContext;
     } else {
         MasterViewController *masterViewController = [[[MasterViewController alloc] initWithNibName:@"MasterViewController_iPad" bundle:nil] autorelease];
         UINavigationController *masterNavigationController = [[[UINavigationController alloc] initWithRootViewController:masterViewController] autorelease];
@@ -81,7 +74,9 @@
         self.splitViewController.viewControllers = [NSArray arrayWithObjects:masterNavigationController, detailNavigationController, nil];
         
         self.window.rootViewController = self.splitViewController;
+       masterViewController.managedObjectContext = self.managedObjectContext;
     }
+    
     [self.window makeKeyAndVisible];
     return YES;
 }

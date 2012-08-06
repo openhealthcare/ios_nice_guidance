@@ -48,7 +48,7 @@
     // Update the user interface for the detail item.
     if (self.detailItem) {
         //self.detailDescriptionLabel.text = [self.detailItem description];
-        Guidelines *guideline = (Guidelines *)self.detailItem;
+        Guideline *guideline = (Guideline *)self.detailItem;
         
         self.navigationItem.title = guideline.title;
         
@@ -86,9 +86,11 @@
             print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleDone  target:self action:@selector(print:)];
             NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
             [self.navigationItem setRightBarButtonItems:buttonArray];
+            [buttonArray release];
         }else{
             NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share, nil];
             [self.navigationItem setRightBarButtonItems:buttonArray];
+            [buttonArray release];
         }
     }
 }

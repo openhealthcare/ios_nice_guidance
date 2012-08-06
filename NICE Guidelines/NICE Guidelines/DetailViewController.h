@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Guidelines.h"
+#import "Guideline.h"
 
 @class MasterViewController;
 
