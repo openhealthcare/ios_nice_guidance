@@ -11,6 +11,7 @@
 #import "MasterViewController.h"
 #import "Guideline.h"
 #import "DetailViewController.h"
+#import "Reachability.h"
 
 @implementation AppDelegate
 
@@ -34,23 +35,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSManagedObjectContext *context = [self managedObjectContext];
-    Guideline *guideline = [NSEntityDescription insertNewObjectForEntityForName:@"Guideline" inManagedObjectContext:context];
-    guideline.title = @"Hypertension";
-    guideline.url = @"http://www.nice.org.uk/nicemedia/live/13561/56015/56015.pdf";
-    guideline.category = @"g";
-    guideline.code = @"CG127";
-    guideline.subcategory = @"g";
-
     
-    NSError *error;
-    if(![context save:&error]){
-        NSLog(@"Error %@", [error localizedDescription]);
-    }
-
-    
-    
-    
+    //See if we have a network connection, if no then don't worry about updating but display a message saying there might be updates available
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
+    hostReachable = [[Reachability reachabilityWithHostName:@"www.openhealthcare.org.uk"] retain];
+    //update if file moves URL
+    [hostReachable startNotifier];
     
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
@@ -210,29 +200,6 @@
     
     if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error])
     {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         
-         Typical reasons for an error here include:
-         * The persistent store is not accessible;
-         * The schema for the persistent store is incompatible with current managed object model.
-         Check the error message to determine what the actual problem was.
-         
-         
-         If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
-         
-         If you encounter schema incompatibility errors during development, you can reduce their frequency by:
-         * Simply deleting the existing store:
-         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
-         
-         * Performing automatic lightweight migration by passing the following dictionary as the options parameter: 
-         [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
-         
-         Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
-         
-         */
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }    
@@ -249,6 +216,75 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
+-(void)checkNetworkStatus:(NSNotification *)notice{
+    NetworkStatus hostStatus = [hostReachable currentReachabilityStatus];
+    switch (hostStatus) {
+        case NotReachable:
+        {
+            hostActive = NO;
+            break;
+        }
+        case ReachableViaWiFi:
+        {
+            hostActive = YES;
+            break;
+        }
+        case ReachableViaWWAN:
+        {
+            hostActive = YES;
+            break;
+        }
+    }
+    [self checkForUpdates];
+}
+-(void)checkForUpdates{
+    //Check for the updated data async
+    NSURLRequest *updateData = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.openhealthcare.org.uk/guidelines.xml"] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:60.0];
+    updateConnection = [[NSURLConnection alloc] initWithRequest:updateData delegate:self];
+    if(updateConnection){
+        updatedData = [[NSMutableData data] retain];
+        newDataAvailable = NO;
+    }
+}
+//deal with all the connection mumbo jumbo
+-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    //Grab the header from the response
+    NSHTTPURLResponse *hr = (NSHTTPURLResponse *)response;
+    NSDictionary *dict = [hr allHeaderFields];
+    NSString *lastMod = [dict valueForKey:@"Last-Modified"];
+    
+    //Convert to a date
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss zzzz"];
+    NSDate *server = [dateFormatter dateFromString:lastMod];
+    
+    //Get current version date from user_info property list
+    NSString *propListPath = [[NSBundle mainBundle] pathForResource:@"user_info" ofType:@"plist"];
+    NSDictionary *user_info_dict = [NSDictionary dictionaryWithContentsOfFile:propListPath];
+    NSDate *currentVersion = [user_info_dict valueForKey:@"current_version"];
+    
+    //Compare with date from user_info 
+    if([currentVersion compare:server] == NSOrderedAscending){
+        //This means that there is new data
+        newDataAvailable = YES;
+    }
+    
+    //reset the data
+    [updatedData setLength:0];
+}
 
+-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    [updatedData appendData:data];
+}
 
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
+}
+
+//If the connection has finished loading
+-(void)connectionDidFinishLoading:(NSURLConnection *)connection{
+    [connection release];
+    if(newDataAvailable){
+        //Do the update stuff as new data is available
+    }
+}
 @end

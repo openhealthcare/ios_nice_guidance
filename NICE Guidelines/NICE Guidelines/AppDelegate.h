@@ -7,8 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+@class Reachability;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>{
+    Reachability *hostReachable;
+    BOOL hostActive, newDataAvailable;
+    NSURLConnection *updateConnection;
+    NSMutableData *updatedData;
+}
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -21,5 +27,5 @@
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
-
+-(void)checkForUpdates;
 @end

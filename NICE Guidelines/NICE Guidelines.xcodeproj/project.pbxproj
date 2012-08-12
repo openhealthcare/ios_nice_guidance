@@ -22,6 +22,9 @@
 		7E620BFD15C8AD37002CE045 /* 211-action@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E620BF315C8AD37002CE045 /* 211-action@2x.png */; };
 		7E620BFE15C8AD37002CE045 /* 212-action2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E620BF415C8AD37002CE045 /* 212-action2.png */; };
 		7E620BFF15C8AD37002CE045 /* action2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E620BF515C8AD37002CE045 /* action2.png */; };
+		7ED2B7C515D7B16300CA47F3 /* user_info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7ED2B7C415D7B16300CA47F3 /* user_info.plist */; };
+		7ED2B7CD15D7B39300CA47F3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED2B7CC15D7B39300CA47F3 /* Reachability.m */; };
+		7ED2B7CF15D7B8B800CA47F3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ED2B7CE15D7B8B800CA47F3 /* SystemConfiguration.framework */; };
 		7EE1AB8A15C849C6009DF75B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8915C849C6009DF75B /* UIKit.framework */; };
 		7EE1AB8C15C849C6009DF75B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8B15C849C6009DF75B /* Foundation.framework */; };
 		7EE1AB8E15C849C6009DF75B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8D15C849C6009DF75B /* CoreGraphics.framework */; };
@@ -56,6 +59,10 @@
 		7E620BF315C8AD37002CE045 /* 211-action@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "211-action@2x.png"; sourceTree = SOURCE_ROOT; };
 		7E620BF415C8AD37002CE045 /* 212-action2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "212-action2.png"; sourceTree = SOURCE_ROOT; };
 		7E620BF515C8AD37002CE045 /* action2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = action2.png; sourceTree = SOURCE_ROOT; };
+		7ED2B7C415D7B16300CA47F3 /* user_info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = user_info.plist; sourceTree = "<group>"; };
+		7ED2B7CB15D7B39300CA47F3 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		7ED2B7CC15D7B39300CA47F3 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		7ED2B7CE15D7B8B800CA47F3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		7EE1AB8515C849C6009DF75B /* NICE Guidelines.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NICE Guidelines.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EE1AB8915C849C6009DF75B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7EE1AB8B15C849C6009DF75B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -84,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7ED2B7CF15D7B8B800CA47F3 /* SystemConfiguration.framework in Frameworks */,
 				7E47AA2C15CF09D300F9DD38 /* CoreData.framework in Frameworks */,
 				7EE1AB8A15C849C6009DF75B /* UIKit.framework in Frameworks */,
 				7EE1AB8C15C849C6009DF75B /* Foundation.framework in Frameworks */,
@@ -97,7 +105,6 @@
 		7EE1AB7A15C849C6009DF75B = {
 			isa = PBXGroup;
 			children = (
-				7E47AA2B15CF09D300F9DD38 /* CoreData.framework */,
 				7EED422D15CA05C600F47C2E /* NICE icon iOS 72.png */,
 				7EED422B15CA05A300F47C2E /* appicon@2x.png */,
 				7EED422815CA059C00F47C2E /* appicon.png */,
@@ -122,6 +129,8 @@
 		7EE1AB8815C849C6009DF75B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7ED2B7CE15D7B8B800CA47F3 /* SystemConfiguration.framework */,
+				7E47AA2B15CF09D300F9DD38 /* CoreData.framework */,
 				7EE1AB8915C849C6009DF75B /* UIKit.framework */,
 				7EE1AB8B15C849C6009DF75B /* Foundation.framework */,
 				7EE1AB8D15C849C6009DF75B /* CoreGraphics.framework */,
@@ -132,6 +141,8 @@
 		7EE1AB8F15C849C6009DF75B /* NICE Guidelines */ = {
 			isa = PBXGroup;
 			children = (
+				7ED2B7CB15D7B39300CA47F3 /* Reachability.h */,
+				7ED2B7CC15D7B39300CA47F3 /* Reachability.m */,
 				7EE1AB9815C849C6009DF75B /* AppDelegate.h */,
 				7EE1AB9915C849C6009DF75B /* AppDelegate.m */,
 				7EE1AB9B15C849C6009DF75B /* MasterViewController.h */,
@@ -165,6 +176,7 @@
 				7EE1AB9215C849C6009DF75B /* InfoPlist.strings */,
 				7EE1AB9515C849C6009DF75B /* main.m */,
 				7EE1AB9715C849C6009DF75B /* NICE Guidelines-Prefix.pch */,
+				7ED2B7C415D7B16300CA47F3 /* user_info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -239,6 +251,7 @@
 				7EED422C15CA05A300F47C2E /* appicon@2x.png in Resources */,
 				7EED422E15CA05C600F47C2E /* NICE icon iOS 72.png in Resources */,
 				7E1A38EB15D05B3500E7B351 /* Guidelines.sqlite in Resources */,
+				7ED2B7C515D7B16300CA47F3 /* user_info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,6 +268,7 @@
 				7EE1ABA015C849C6009DF75B /* DetailViewController.m in Sources */,
 				7E1E765B15CDD3CA00EAC734 /* Guidelines.xcdatamodeld in Sources */,
 				7E47AA3515CF231900F9DD38 /* Guideline.m in Sources */,
+				7ED2B7CD15D7B39300CA47F3 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
