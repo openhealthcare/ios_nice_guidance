@@ -25,6 +25,8 @@
 		7ED2B7C515D7B16300CA47F3 /* user_info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7ED2B7C415D7B16300CA47F3 /* user_info.plist */; };
 		7ED2B7CD15D7B39300CA47F3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED2B7CC15D7B39300CA47F3 /* Reachability.m */; };
 		7ED2B7CF15D7B8B800CA47F3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ED2B7CE15D7B8B800CA47F3 /* SystemConfiguration.framework */; };
+		7ED2B7D315D7E19400CA47F3 /* Update.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED2B7D115D7E19300CA47F3 /* Update.m */; };
+		7ED2B7D415D7E19400CA47F3 /* Update.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ED2B7D215D7E19400CA47F3 /* Update.xib */; };
 		7EE1AB8A15C849C6009DF75B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8915C849C6009DF75B /* UIKit.framework */; };
 		7EE1AB8C15C849C6009DF75B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8B15C849C6009DF75B /* Foundation.framework */; };
 		7EE1AB8E15C849C6009DF75B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE1AB8D15C849C6009DF75B /* CoreGraphics.framework */; };
@@ -63,6 +65,9 @@
 		7ED2B7CB15D7B39300CA47F3 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		7ED2B7CC15D7B39300CA47F3 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		7ED2B7CE15D7B8B800CA47F3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		7ED2B7D015D7E19300CA47F3 /* Update.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Update.h; sourceTree = "<group>"; };
+		7ED2B7D115D7E19300CA47F3 /* Update.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Update.m; sourceTree = "<group>"; };
+		7ED2B7D215D7E19400CA47F3 /* Update.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Update.xib; sourceTree = "<group>"; };
 		7EE1AB8515C849C6009DF75B /* NICE Guidelines.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NICE Guidelines.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EE1AB8915C849C6009DF75B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7EE1AB8B15C849C6009DF75B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -149,6 +154,9 @@
 				7EE1AB9C15C849C6009DF75B /* MasterViewController.m */,
 				7EE1AB9E15C849C6009DF75B /* DetailViewController.h */,
 				7EE1AB9F15C849C6009DF75B /* DetailViewController.m */,
+				7ED2B7D015D7E19300CA47F3 /* Update.h */,
+				7ED2B7D115D7E19300CA47F3 /* Update.m */,
+				7ED2B7D215D7E19400CA47F3 /* Update.xib */,
 				7EE1ABA115C849C6009DF75B /* MasterViewController_iPhone.xib */,
 				7EE1ABA415C849C6009DF75B /* MasterViewController_iPad.xib */,
 				7EE1ABA715C849C6009DF75B /* DetailViewController_iPhone.xib */,
@@ -252,6 +260,7 @@
 				7EED422E15CA05C600F47C2E /* NICE icon iOS 72.png in Resources */,
 				7E1A38EB15D05B3500E7B351 /* Guidelines.sqlite in Resources */,
 				7ED2B7C515D7B16300CA47F3 /* user_info.plist in Resources */,
+				7ED2B7D415D7E19400CA47F3 /* Update.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,6 +278,7 @@
 				7E1E765B15CDD3CA00EAC734 /* Guidelines.xcdatamodeld in Sources */,
 				7E47AA3515CF231900F9DD38 /* Guideline.m in Sources */,
 				7ED2B7CD15D7B39300CA47F3 /* Reachability.m in Sources */,
+				7ED2B7D315D7E19400CA47F3 /* Update.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

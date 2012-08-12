@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 @class Reachability;
+@class Update;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>{
     Reachability *hostReachable;
     BOOL hostActive, newDataAvailable;
     NSURLConnection *updateConnection;
     NSMutableData *updatedData;
+    Update *update;
 }
 
 @property (strong, nonatomic) UIWindow *window;

@@ -12,6 +12,7 @@
 #import "Guideline.h"
 #import "DetailViewController.h"
 #import "Reachability.h"
+#import "Update.h"
 
 @implementation AppDelegate
 
@@ -285,6 +286,32 @@
     [connection release];
     if(newDataAvailable){
         //Do the update stuff as new data is available
+        UIAlertView *updateMessage = [[UIAlertView alloc] initWithTitle:@"Updates available" message:@"There is a newer version of the NICE guidelines list. Press Update to download" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Update", nil];
+        [updateMessage show];
+        [updateMessage release];
+    }
+}
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(buttonIndex == 1){
+        //The user pressed update so now we will run the script to update the information
+         if(update == nil){
+            update = [[Update alloc] initWithNibName:@"Update" bundle:[NSBundle mainBundle]];
+        }
+        CGFloat width, height;
+        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
+            width = 280.0f;
+            height = 280.0f;
+        }else{
+            width = 320.0f;
+            height = 320.0f;
+        }
+        CGFloat xaxis = (self.window.frame.size.width / 2) - (width / 2);
+        CGFloat yaxis = (self.window.frame.size.height / 2) - (height / 2);
+        CGRect frame = CGRectMake(xaxis, yaxis, width, height);
+        update.view.frame = frame;	
+        update.updateData = updatedData;
+        update.appDel = self;
+        [self.window insertSubview:update.view aboveSubview:self.window.rootViewController.view];
     }
 }
 @end
