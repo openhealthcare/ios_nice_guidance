@@ -16,6 +16,7 @@
     NSURLConnection *updateConnection;
     NSMutableData *updatedData;
     Update *update;
+    NSData *updates;
 }
 
 @property (strong, nonatomic) UIWindow *window;
@@ -30,4 +31,5 @@
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 -(void)checkForUpdates;
+-(void)finishedUpdates:(id)sender;
 @end

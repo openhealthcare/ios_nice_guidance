@@ -37,7 +37,7 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
-					<object class="IBUILabel" id="277198085">
+					<object class="IBUILabel" id="483756741">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">290</int>
 						<string key="NSFrame">{{20, 7}, {236, 38}}</string>
@@ -72,7 +72,7 @@
 							<int key="NSfFlags">16</int>
 						</object>
 					</object>
-					<object class="IBUIButton" id="294934887">
+					<object class="IBUIButton" id="583571540">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">266</int>
 						<string key="NSFrame">{{20, 211}, {236, 45}}</string>
@@ -111,7 +111,7 @@
 							<int key="NSfFlags">16</int>
 						</object>
 					</object>
-					<object class="IBUIImageView" id="1013948998">
+					<object class="IBUIImageView" id="258557861">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{40, 60}, {196, 128}}</string>
@@ -129,7 +129,7 @@
 				<string key="NSFrameSize">{276, 276}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="277198085"/>
+				<reference key="NSNextKeyView" ref="483756741"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MC4wODY5NTY1MjE3NCAwLjA4Njk1NjUyMTc0IDAuMDg2OTU2NTIxNzQgMC44AA</bytes>
@@ -151,7 +151,7 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">continueButton</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="294934887"/>
+						<reference key="destination" ref="583571540"/>
 					</object>
 					<int key="connectionID">7</int>
 				</object>
@@ -159,9 +159,18 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">progressImage</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="1013948998"/>
+						<reference key="destination" ref="258557861"/>
 					</object>
 					<int key="connectionID">9</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">contPressed:</string>
+						<reference key="source" ref="583571540"/>
+						<reference key="destination" ref="975951072"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">10</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -176,9 +185,9 @@
 						<int key="objectID">1</int>
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="1013948998"/>
-							<reference ref="294934887"/>
-							<reference ref="277198085"/>
+							<reference ref="258557861"/>
+							<reference ref="583571540"/>
+							<reference ref="483756741"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -195,17 +204,17 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">4</int>
-						<reference key="object" ref="277198085"/>
+						<reference key="object" ref="483756741"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">6</int>
-						<reference key="object" ref="294934887"/>
+						<reference key="object" ref="583571540"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">8</int>
-						<reference key="object" ref="1013948998"/>
+						<reference key="object" ref="258557861"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
@@ -225,13 +234,24 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">9</int>
+			<int key="maxID">10</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">Update</string>
 					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">contPressed:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">contPressed:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">contPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="continueButton">UIButton</string>
 						<string key="progressImage">UIImageView</string>

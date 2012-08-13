@@ -43,6 +43,7 @@
     //update if file moves URL
     [hostReachable startNotifier];
     
+    updates = [[NSData alloc] init];
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
@@ -286,6 +287,7 @@
     [connection release];
     if(newDataAvailable){
         //Do the update stuff as new data is available
+        [updates initWithData:updatedData];
         UIAlertView *updateMessage = [[UIAlertView alloc] initWithTitle:@"Updates available" message:@"There is a newer version of the NICE guidelines list. Press Update to download" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Update", nil];
         [updateMessage show];
         [updateMessage release];
@@ -295,7 +297,7 @@
     if(buttonIndex == 1){
         //The user pressed update so now we will run the script to update the information
          if(update == nil){
-            update = [[Update alloc] initWithNibName:@"Update" bundle:[NSBundle mainBundle]];
+             update = [[Update alloc] initWithNibName:@"Update" bundle:[NSBundle mainBundle] updateData:updates];
         }
         CGFloat width, height;
         if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
@@ -309,10 +311,15 @@
         CGFloat yaxis = (self.window.frame.size.height / 2) - (height / 2);
         CGRect frame = CGRectMake(xaxis, yaxis, width, height);
         update.view.frame = frame;	
-        update.updateData = updatedData;
+        update.updateData = updates;
         update.appDel = self;
         update.managedObjectContext = self.managedObjectContext;
         [self.window insertSubview:update.view aboveSubview:self.window.rootViewController.view];
     }
+}
+-(void)finishedUpdates:(id)sender{
+    [update.view removeFromSuperview];
+    [update release];
+    update = nil;
 }
 @end
