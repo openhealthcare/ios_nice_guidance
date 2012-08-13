@@ -46,9 +46,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-       // [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
-    }
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
@@ -58,11 +55,6 @@
     NSError *error;
     self.menuItems = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
     [fetchRequest release];
-    //Check to see if the guidelines exist locally
-    
-    //If they don't then load them
-    
-    //check for updates
 }
 
 - (void)viewDidUnload
@@ -165,8 +157,8 @@
     return menuItems;
 }*/
 
-- (void)parseXMLFileAtURL:(NSString *)URL
-{	
+/*- (void)parseXMLFileAtURL:(NSString *)URL
+{	*/
     //you must then convert the path to a proper NSURL or it won't work
    /* NSURL *xmlURL = [NSURL URLWithString:URL];
 	
@@ -184,7 +176,7 @@
 	
     [menuParser parse];*/
 	
-}
+///}
 
 /*- (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
 	NSString * errorString = [NSString stringWithFormat:@"Unable to download story feed from web site (Error code %i )", [parseError code]];

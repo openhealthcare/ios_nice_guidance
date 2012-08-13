@@ -311,6 +311,7 @@
         update.view.frame = frame;	
         update.updateData = updatedData;
         update.appDel = self;
+        update.managedObjectContext = self.managedObjectContext;
         [self.window insertSubview:update.view aboveSubview:self.window.rootViewController.view];
     }
 }

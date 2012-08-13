@@ -7,14 +7,18 @@
 //
 
 #import "Update.h"
+#import "Guideline.h"
 
 @implementation Update
-@synthesize updateData, appDel;
+@synthesize updateData, appDel, managedObjectContext;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        if(managedObjectContext == nil){
+            managedObjectContext = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+        }
     }
     return self;
 }
@@ -33,6 +37,17 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
+    [fetchRequest setEntity:entity];
+    NSError *error;
+    currentItems = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    [fetchRequest release];
+    
+    for(Guideline *item in currentItems){
+        NSLog(@"%@",item.title);
+    }
 }
 
 - (void)viewDidUnload

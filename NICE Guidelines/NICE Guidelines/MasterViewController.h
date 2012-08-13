@@ -10,20 +10,14 @@
 
 @class DetailViewController;
 
-@interface MasterViewController : UITableViewController<NSXMLParserDelegate>{
-    NSXMLParser *menuParser;
-    NSString *currentElement;
-    NSMutableString *currentTitle, *currentURL, *currentCategory, *currentCode, *currentSubCat;
-    NSMutableArray *menuData;
-}
+@interface MasterViewController : UITableViewController
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property (strong, nonatomic) DetailViewController *actuallyworksDetail;
 @property (strong, nonatomic)id detailObject;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSArray *menuItems;
-//-(NSArray *)loadMenu;
--(void)parseXMLFileAtURL:(NSString *)URL;
+
 
 
 @end

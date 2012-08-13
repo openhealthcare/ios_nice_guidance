@@ -8,11 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+
 @interface Update : UIViewController{
     NSMutableData *updateData;
     AppDelegate *appDel;
+    IBOutlet UIButton *continueButton;
+    IBOutlet UIImageView *progressImage;
+    NSMutableArray *items;
+    NSArray *currentItems;
 }
 @property (nonatomic, retain) NSMutableData *updateData;
 @property (nonatomic, retain) AppDelegate *appDel;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end
