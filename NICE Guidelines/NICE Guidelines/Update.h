@@ -13,12 +13,13 @@
     NSData *updateData;
     AppDelegate *appDel;
     IBOutlet UIButton *continueButton;
-    IBOutlet UIImageView *progressImage;
-    NSMutableDictionary *xmlItem, *xmlI;
+    IBOutlet UIProgressView *progress;
+    NSMutableDictionary *xmlItem;
+    NSMutableArray *xmlI;
     NSArray *currentItems, *items;
     NSXMLParser *parser;
     NSString *element;
-    NSMutableString *title, *url, *category, *code, *subcat;
+    NSMutableString *title, *category, *code, *subcat,*url;
 }
 @property (nonatomic, retain) NSData *updateData;
 @property (nonatomic, retain) AppDelegate *appDel;

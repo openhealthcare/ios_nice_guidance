@@ -51,6 +51,7 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
     
     [fetchRequest setEntity:entity];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
     
     NSError *error;
     self.menuItems = [managedObjectContext executeFetchRequest:fetchRequest error:&error];

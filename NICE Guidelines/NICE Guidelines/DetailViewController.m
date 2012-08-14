@@ -52,7 +52,7 @@
         self.navigationItem.title = guideline.title;
         
         
-        
+        NSLog(@"%@", guideline.url);
         
         url = [[NSURL alloc] initWithString:guideline.url];
         NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];

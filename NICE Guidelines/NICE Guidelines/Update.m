@@ -41,11 +41,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     continueButton.enabled = NO;
+    
+    
+    //Set up sort descriptors for organising the data
+    NSSortDescriptor *catsort = [[NSSortDescriptor alloc] initWithKey:@"category" ascending:YES];
+    NSSortDescriptor *subsort = [[NSSortDescriptor alloc] initWithKey:@"subcategory" ascending: YES];
+    NSSortDescriptor *titlesort = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES];
     //grab the existing data
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
     [fetchRequest setEntity:entity];
-    [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObjects:catsort,subsort,titlesort,nil]];
     NSError *error;
     
     //put that data into an array
@@ -53,18 +59,20 @@
     [fetchRequest release];
     
     //Now grab the import data
-    xmlI = [[NSMutableDictionary alloc] init];
+    xmlI = [[NSMutableArray alloc] init];
     [self parseXMLData:updateData];
     
-    items = [[xmlI allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    
+    items = [xmlI sortedArrayUsingDescriptors:[NSArray arrayWithObjects:catsort, subsort, titlesort, nil]];
     NSEnumerator* importIterator = [items objectEnumerator];
     NSEnumerator* objectIterator = [currentItems objectEnumerator];
     NSString *thisImportIdentifier = [importIterator nextObject];
     NSManagedObject *thisObject = [objectIterator nextObject];
-    NSArray *overwritables = [[NSArray alloc] init];
+    NSArray *overwritables = [[NSArray alloc] initWithObjects:@"url",@"code",@"category",@"subcategory", nil];
+    NSUInteger currentInt = 0;
+    progress.progress = 0;
     // Loop through both lists, comparing identifiers, until both are empty
     while (thisImportIdentifier || thisObject) {
-        
         // Compare identifiers
         NSComparisonResult comparison;
         if (!thisImportIdentifier) {  // If the import list has run out, the import identifier sorts last (i.e. remove remaining objects)
@@ -72,40 +80,53 @@
         } else if (!thisObject) {  // If managed object list has run out, the import identifier sorts first (i.e. add remaining objects)
             comparison = NSOrderedAscending;
         } else {  // If neither list has run out, compare with the object
-            comparison = [thisImportIdentifier compare:[thisObject valueForKey:@"title"]];
+            comparison = [[thisImportIdentifier valueForKey:@"title"] compare:[thisObject valueForKey:@"title"]];
         }
-        
         if (comparison == NSOrderedSame) {  // Identifiers match
             
             if (overwritables) {  // Merge the allowed non-identifier properties, if not nil
-                NSDictionary *importAttributes = [xmlI objectForKey:thisImportIdentifier];
+                NSDictionary *importAttributes = [items objectAtIndex:currentInt];
                 NSDictionary *overwriteAttributes = [NSDictionary dictionaryWithObjects:[importAttributes objectsForKeys:overwritables notFoundMarker:@""] forKeys:overwritables];
                 
                 [thisObject setValuesForKeysWithDictionary:overwriteAttributes];
+                NSError *error;
+                if(![self.managedObjectContext save:&error]){
+                    NSLog(@"error saving updated object: %@ %@", error, [error localizedDescription]);
+                }
             }
             
-            // Move ahead in both lists
+            // Move ahead in both lists 
+           
+    
             thisObject = [objectIterator nextObject];
             thisImportIdentifier = [importIterator nextObject];
-            
-        } else if (comparison == NSOrderedAscending) {  // Imported item sorts before stored item
+            currentInt++;
+            progress.progress = (currentInt / [items count]);
+       } else if (comparison == NSOrderedAscending) {  // Imported item sorts before stored item
             
             // The imported item is previously unseen - add it and move ahead to the next import identifier
             
             NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:@"Guidelines" inManagedObjectContext:self.managedObjectContext];
-            [newObject setValue:thisImportIdentifier forKey:@"title"];
-            [newObject setValuesForKeysWithDictionary:[xmlI objectForKey:thisImportIdentifier]];
+            [newObject setValue:[thisImportIdentifier valueForKey:@"title"] forKey:@"title"];
+            [newObject setValue:[thisImportIdentifier valueForKey:@"url"] forKey:@"url"];
+            [newObject setValue:[thisImportIdentifier valueForKey:@"code"] forKey:@"code"];
+            [newObject setValue:[thisImportIdentifier valueForKey:@"category"] forKey:@"category"];
+            [newObject setValue:[thisImportIdentifier valueForKey:@"subcategory"] forKey:@"subcategory"];
+            //[newObject setValuesForKeysWithDictionary:[items objectAtIndex:currentInt]];
             thisImportIdentifier = [importIterator nextObject];
-            
+            currentInt++;
+            progress.progress = (currentInt / [items count]);
         } else {  // Imported item sorts after stored item
             
             // The stored item is not among those imported, and should be removed, then move ahead to the next stored item
             
-            //[self deleteObject:thisObject];
+            [self.managedObjectContext deleteObject:thisObject];
             thisObject = [objectIterator nextObject];
-            
+            currentInt++;
+            progress.progress = (currentInt / [items count]);
         }
     }
+    //Need to now save the timestamp to the user_info.plist file
 }
 
 - (void)viewDidUnload
@@ -167,7 +188,7 @@
         [xmlItem setObject:code forKey:@"code"];
         [xmlItem setObject:category forKey:@"category"];
         [xmlItem setObject:subcat forKey:@"subcategory"];
-        [xmlI setObject:xmlItem forKey:title];
+        [xmlI addObject:xmlItem];
         /*[title release];
         [url release];
         [code release];
@@ -179,12 +200,12 @@
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string{
     NSString *cleanString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
+    
     if([element isEqualToString:@"title"]){
         [title appendString:cleanString];
     }
     if([element isEqualToString:@"url"]){
-        //[url appendString:cleanString];
-        [url appendString:@"http://colinwren.com"];
+        [url appendString:cleanString];
     }
 }
 
