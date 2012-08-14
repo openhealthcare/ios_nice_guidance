@@ -20,11 +20,12 @@
     NSXMLParser *parser;
     NSString *element;
     NSMutableString *title, *category, *code, *subcat,*url;
+    NSDate *serverDate;
 }
 @property (nonatomic, retain) NSData *updateData;
 @property (nonatomic, retain) AppDelegate *appDel;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil updateData:(NSData *)updates;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil updateData:(NSData *)updates serverDate:(NSDate *)server;
 -(void)parseXMLData:(NSData *)xmlData;
 -(IBAction)contPressed:(id)sender;
 @end

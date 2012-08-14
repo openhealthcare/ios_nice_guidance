@@ -11,7 +11,7 @@
 
 @implementation Update
 @synthesize updateData, appDel, managedObjectContext;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil updateData:(NSData *)updates
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil updateData:(NSData *)updates serverDate:(NSDate *)server
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -21,6 +21,10 @@
         }
         if(updateData == nil){
             updateData = [[NSData alloc] initWithData:updates];
+        }
+        if(serverDate == nil){
+            serverDate = [[NSDate alloc] init];
+            serverDate = server;
         }
     }
     return self;
@@ -41,7 +45,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     continueButton.enabled = NO;
-    
     
     //Set up sort descriptors for organising the data
     NSSortDescriptor *catsort = [[NSSortDescriptor alloc] initWithKey:@"category" ascending:YES];
@@ -127,6 +130,19 @@
         }
     }
     //Need to now save the timestamp to the user_info.plist file
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [paths objectAtIndex:0];
+    NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];
+    
+    NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
+    
+    //need to save server date
+    [plist setObject:serverDate forKey:@"current_version"];
+    if([plist writeToFile:path atomically:YES]){
+        continueButton.enabled = YES;
+    }else{
+        [appDel finishedUpdates:nil];
+    }
 }
 
 - (void)viewDidUnload
@@ -210,7 +226,7 @@
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
-    continueButton.enabled = YES;
+    
 }
 -(IBAction)contPressed:(id)sender{
     [appDel finishedUpdates:nil];

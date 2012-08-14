@@ -17,6 +17,8 @@
     NSMutableData *updatedData;
     Update *update;
     NSData *updates;
+    NSDate *server;
+    NSString *path;
 }
 
 @property (strong, nonatomic) UIWindow *window;

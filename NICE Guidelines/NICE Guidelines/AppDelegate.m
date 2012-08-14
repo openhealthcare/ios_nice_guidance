@@ -36,6 +36,17 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //Save the user_info.plist file to the documents directory
+    NSError *plistError;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    path = [[NSString alloc] initWithString:[documentsDirectory stringByAppendingPathComponent:@"user_info.plist"]];
+    
+    NSFileManager *fileMan = [NSFileManager defaultManager];
+    if(![fileMan fileExistsAtPath:path]){
+        NSString *bundle = [[NSBundle mainBundle] pathForResource:@"user_info" ofType:@"plist"];
+        [fileMan copyItemAtPath:bundle toPath:path error:&plistError];
+    }
     
     //See if we have a network connection, if no then don't worry about updating but display a message saying there might be updates available
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
@@ -258,11 +269,11 @@
     //Convert to a date
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss zzzz"];
-    NSDate *server = [dateFormatter dateFromString:lastMod];
+    NSDate *serverD = [dateFormatter dateFromString:lastMod];
+    server = [serverD copy];
     
     //Get current version date from user_info property list
-    NSString *propListPath = [[NSBundle mainBundle] pathForResource:@"user_info" ofType:@"plist"];
-    NSDictionary *user_info_dict = [NSDictionary dictionaryWithContentsOfFile:propListPath];
+    NSDictionary *user_info_dict = [NSDictionary dictionaryWithContentsOfFile:path];
     NSDate *currentVersion = [user_info_dict valueForKey:@"current_version"];
     
     //Compare with date from user_info 
@@ -297,7 +308,7 @@
     if(buttonIndex == 1){
         //The user pressed update so now we will run the script to update the information
          if(update == nil){
-             update = [[Update alloc] initWithNibName:@"Update" bundle:[NSBundle mainBundle] updateData:updates];
+             update = [[Update alloc] initWithNibName:@"Update" bundle:[NSBundle mainBundle] updateData:updates serverDate:server];
         }
         CGFloat width, height;
         if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
