@@ -10,7 +10,9 @@
 
 @class DetailViewController;
 
-@interface MasterViewController : UITableViewController
+@interface MasterViewController : UITableViewController{
+    NSFetchedResultsController *frc;
+}
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property (strong, nonatomic) DetailViewController *actuallyworksDetail;

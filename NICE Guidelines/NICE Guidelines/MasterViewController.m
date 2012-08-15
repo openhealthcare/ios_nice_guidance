@@ -51,10 +51,20 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
     
     [fetchRequest setEntity:entity];
+    
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
     
-    NSError *error;
-    self.menuItems = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    frc = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:@"title.stringGroupByFirstInitial" cacheName:nil];
+    
+    NSError *frcErr;
+    [frc performFetch:&frcErr];
+    
+    /*for(Guideline *meh in [[frc sections] objectAtIndex:0]){
+        NSLog(@"%@", meh.title);
+    }*/
+    
+    //NSError *error;
+    //self.menuItems = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
     [fetchRequest release];
 }
 
@@ -98,12 +108,18 @@
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return [[frc sections] count];
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:section];
+    return [sectionInfo name];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.menuItems count];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:section];
+    return [[sectionInfo objects] count];//[self.menuItems count];
 }
 
 // Customize the appearance of table view cells.
@@ -119,7 +135,8 @@
         }
     }
         // Configure the cell.
-    Guideline *cellguide = [self.menuItems objectAtIndex:indexPath.row];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
+    Guideline *cellguide = [[sectionInfo objects] objectAtIndex:indexPath.row];
     cell.textLabel.text = cellguide.title;
     return cell;
 }
@@ -128,8 +145,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    Guideline *selectedGuideline = (Guideline *)[menuItems objectAtIndex:indexPath.row];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
+    Guideline *selectedGuideline = (Guideline *)[[sectionInfo objects] objectAtIndex:indexPath.row];
     
     detailObject = selectedGuideline;
     
@@ -233,5 +250,16 @@
 	}	
 }*/
 
+
+@end
+
+@implementation NSString (FetchedGroupByString)
+
+-(NSString *)stringGroupByFirstInitial{
+    if(!self.length || self.length == 1){
+        return self;
+    }
+    return [self substringToIndex:1];
+}
 
 @end
