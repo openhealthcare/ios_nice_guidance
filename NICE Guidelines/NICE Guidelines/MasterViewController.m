@@ -54,6 +54,7 @@
     
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
     
+    
     frc = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:@"title.stringGroupByFirstInitial" cacheName:nil];
     
     NSError *frcErr;
@@ -136,6 +137,7 @@
     }
         // Configure the cell.
     id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
+    NSLog(@"%@",[[sectionInfo objects] objectAtIndex:indexPath.row]);
     Guideline *cellguide = [[sectionInfo objects] objectAtIndex:indexPath.row];
     cell.textLabel.text = cellguide.title;
     return cell;
