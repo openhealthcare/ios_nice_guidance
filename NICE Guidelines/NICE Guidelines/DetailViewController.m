@@ -50,7 +50,7 @@
         Guideline *guideline = (Guideline *)self.detailItem;
         
         self.navigationItem.title = guideline.title;
-        
+        name = guideline.title;
         
         NSLog(@"%@", guideline.url);
         
@@ -157,9 +157,33 @@
 }
 
 -(IBAction)favourite:(id)sender{
-    //Do favourite thing
-    NSLog(@"Favourite");
-    //This will save current PDF to the user's favourite list (stored in prefs)
+    //Need to now save the name of the PDF to the user_info.plist file
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [paths objectAtIndex:0];
+    NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];
+    
+    NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
+    
+    NSMutableArray *favList = [[NSMutableArray alloc] initWithArray:[plist objectForKey:@"favourites"]];
+    
+    BOOL check = NO;
+    for(NSString *fav in favList){
+        if([fav isEqualToString:name]){
+            check = YES;
+        }
+    }
+    
+    if(check == NO){
+        [favList addObject:name];
+    }
+    //need to save server date
+    [plist setObject:favList forKey:@"favourites"];
+    if([plist writeToFile:path atomically:YES]){
+        NSLog(@"%@", favList);
+    }else{
+        NSLog(@"fail");
+    }
+
 }
 
 -(IBAction)share:(id)sender{

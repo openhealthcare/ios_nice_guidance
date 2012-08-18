@@ -18,6 +18,7 @@
     UIBarButtonItem *print;
     UIBarButtonItem *share;
     UIBarButtonItem *favourite;
+    NSString *name;
 }
 
 @property (strong, nonatomic) id detailItem;
