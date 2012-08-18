@@ -15,7 +15,6 @@ What's next?
 - Use NSPredicate to remove "duplicate" PDFs from list, technically they have a different category so they aren't duplicate but on A-Z they are
 - Favourite button that saves an array of titles into user_info.plist
 - Share button that sends URL and title to Twitter and Email
-- Settings page with details for app
 - Tabbed Master view with a-z, category and favourite options
 - General UI sprucing up
 - Proper memory management review
