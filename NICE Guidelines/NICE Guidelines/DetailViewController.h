@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 #import "Guideline.h"
 
 @class MasterViewController;
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate, UIPopoverControllerDelegate, UIPrintInteractionControllerDelegate>{
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate, UIPopoverControllerDelegate, UIPrintInteractionControllerDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>{
     IBOutlet UIWebView *web;
     NSURL *url;
     IBOutlet UIToolbar *bottomBar;

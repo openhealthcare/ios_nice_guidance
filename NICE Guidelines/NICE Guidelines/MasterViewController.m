@@ -137,7 +137,6 @@
     }
         // Configure the cell.
     id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
-    NSLog(@"%@",[[sectionInfo objects] objectAtIndex:indexPath.row]);
     Guideline *cellguide = [[sectionInfo objects] objectAtIndex:indexPath.row];
     cell.textLabel.text = cellguide.title;
     return cell;

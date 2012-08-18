@@ -52,7 +52,6 @@
         self.navigationItem.title = guideline.title;
         name = guideline.title;
         
-        NSLog(@"%@", guideline.url);
         
         url = [[NSURL alloc] initWithString:guideline.url];
         NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
@@ -188,8 +187,38 @@
 
 -(IBAction)share:(id)sender{
     //do Share thing
-    NSLog(@"Share");
-    //This will launch an actionsheet with various types of sharing
+    UIActionSheet *sharer = [[UIActionSheet alloc] initWithTitle:@"Share guideline" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Email", @"Twitter", nil];
+    [sharer showInView:self.view];
+    [sharer release];
+}
+
+//To handle button press on actionsheet
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(buttonIndex == 0){
+        if ([MFMailComposeViewController canSendMail]) {
+            MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
+            NSString *subjectToWrite = [NSString stringWithFormat:@"NICE Guideline -  %@", name];
+            [mfViewController setSubject:subjectToWrite];
+            NSString *bodyToWrite = [NSString stringWithFormat:@"<p>I've just read the NICE Guidelines on <strong> %@ </strong> using Open Health Care UK's NICE Guidelines app for iPhone and iPad. You can read can read it at <a href=\"%@\">%@</a></p>", name, url, url];
+            [mfViewController setMessageBody:bodyToWrite isHTML:YES];
+            mfViewController.mailComposeDelegate = self;
+            
+            [self presentModalViewController:mfViewController animated:YES];
+            [mfViewController release];
+        }else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+            
+            [alert show];
+            [alert release];
+        }
+    }
+    if(buttonIndex == 1){
+        NSLog(@"pressed Twitter");
+    }
+}
+- (void)mailComposeController:(MFMailComposeViewController*)mailController didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+    [self becomeFirstResponder];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(IBAction)print:(id)sender{
