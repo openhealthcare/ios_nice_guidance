@@ -12,8 +12,6 @@ The Mac OS X is used to convert the XML from the webserver into a .sqllite file 
 What's next?
 ------------
 
-- Use NSPredicate to remove "duplicate" PDFs from list, technically they have a different category so they aren't duplicate but on A-Z they are
-- Share button that sends URL and title to Twitter and Email
 - Tabbed Master view with a-z, category and favourite options
 - General UI sprucing up
 - Proper memory management review

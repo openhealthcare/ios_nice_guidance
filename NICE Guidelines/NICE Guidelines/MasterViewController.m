@@ -74,6 +74,9 @@
     
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
     
+   /* NSPredicate *pred = [NSPredicate predicateWithFormat:@"title unique"];
+    
+    [fetchRequest setPredicate:pred];*/
     
     self.frc = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:@"title.stringGroupByFirstInitial" cacheName:nil];
 
@@ -83,6 +86,7 @@
     
     NSError *frcErr;
     [self.frc performFetch:&frcErr];
+    
     
     [fetchRequest release];
 }
@@ -140,7 +144,21 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fetchedResultsControllerForTableView:tableView] sections] objectAtIndex:section];
-    return [[sectionInfo objects] count];
+    
+    NSMutableArray *sectionGuides = [[NSMutableArray alloc] init];
+    
+    NSString *deltaTitle = @"";
+    for(Guideline *guide in [sectionInfo objects]){
+        if([guide.title isEqualToString:deltaTitle]){
+        }else{
+            [sectionGuides addObject:guide];
+            deltaTitle = guide.title;
+        }
+
+    }
+    
+    NSLog(@"sectioninfo: %i, sectionGuides: %i", [[sectionInfo objects] count], [sectionGuides count]);
+    return [sectionGuides count];
 }
 
 // Customize the appearance of table view cells.
@@ -165,7 +183,18 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fetchedResultsControllerForTableView:tableView] sections] objectAtIndex:indexPath.section];
-    Guideline *selectedGuideline = (Guideline *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+    NSMutableArray *sectionGuides = [[NSMutableArray alloc] init];
+    
+    NSString *deltaTitle = @"";
+    for(Guideline *guide in [sectionInfo objects]){
+        if([guide.title isEqualToString:deltaTitle]){
+        }else{
+            [sectionGuides addObject:guide];
+            deltaTitle = guide.title;
+        }
+        
+    }
+    Guideline *selectedGuideline = (Guideline *)[sectionGuides objectAtIndex:indexPath.row];
     detailObject = selectedGuideline;
     
 
@@ -193,9 +222,19 @@
     
     
     id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedResultsController sections] objectAtIndex:theIndexPath.section];
-    Guideline *cellguide = [[sectionInfo objects] objectAtIndex:theIndexPath.row];
+    
+    NSMutableArray *sectionGuide = [[NSMutableArray alloc] init];
+   
+    NSString *deltaTitle = @"";
+    for(Guideline *guide in [sectionInfo objects]){
+        if([guide.title isEqualToString:deltaTitle]){
+        }else{
+            [sectionGuide addObject:guide];
+            deltaTitle = guide.title;
+        }
+    }
+    Guideline *cellguide = [sectionGuide objectAtIndex:theIndexPath.row];
     theCell.textLabel.text = cellguide.title;
-    NSLog(@"title: %@", cellguide.title);
 }
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSInteger)scope
