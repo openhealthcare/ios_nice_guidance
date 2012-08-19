@@ -13,7 +13,7 @@
 @implementation MasterViewController
 
 @synthesize detailViewController = _detailViewController;
-@synthesize detailObject, actuallyworksDetail, managedObjectContext, menuItems;
+@synthesize detailObject, actuallyworksDetail, managedObjectContext,frc, searchfrc, searchWasActive, savedSearchTerm, searchController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -36,6 +36,9 @@
 
 - (void)didReceiveMemoryWarning
 {
+    self.savedSearchTerm = [self.searchDisplayController.searchBar text];
+    self.searchWasActive = [self.searchDisplayController isActive];
+    
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.
 }
@@ -47,6 +50,23 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    UISearchBar *searchBar = [[[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 44.0)] autorelease];
+    searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
+    searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.tableView.tableHeaderView = searchBar;
+    
+    self.searchController = [[[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self] autorelease];
+    self.searchController.delegate = self;
+    self.searchController.searchResultsDataSource = self;
+    self.searchController.searchResultsDelegate = self;
+    
+    if(self.savedSearchTerm){
+        [self.searchDisplayController setActive:self.searchWasActive];
+        [self.searchDisplayController.searchBar setText:savedSearchTerm];
+        
+        self.savedSearchTerm = nil;
+    }
+    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
     
@@ -55,17 +75,15 @@
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
     
     
-    frc = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:@"title.stringGroupByFirstInitial" cacheName:nil];
+    self.frc = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:@"title.stringGroupByFirstInitial" cacheName:nil];
+
+        
+    self.searchfrc = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+
     
     NSError *frcErr;
-    [frc performFetch:&frcErr];
+    [self.frc performFetch:&frcErr];
     
-    /*for(Guideline *meh in [[frc sections] objectAtIndex:0]){
-        NSLog(@"%@", meh.title);
-    }*/
-    
-    //NSError *error;
-    //self.menuItems = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
     [fetchRequest release];
 }
 
@@ -88,6 +106,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    self.searchWasActive = [self.searchDisplayController isActive];
+    self.savedSearchTerm = [self.searchDisplayController.searchBar text];
 	[super viewWillDisappear:animated];
 }
 
@@ -109,18 +129,18 @@
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[frc sections] count];
+    return [[[self fetchedResultsControllerForTableView:tableView] sections] count];
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fetchedResultsControllerForTableView:tableView] sections] objectAtIndex:section];
     return [sectionInfo name];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:section];
-    return [[sectionInfo objects] count];//[self.menuItems count];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fetchedResultsControllerForTableView:tableView] sections] objectAtIndex:section];
+    return [[sectionInfo objects] count];
 }
 
 // Customize the appearance of table view cells.
@@ -136,9 +156,7 @@
         }
     }
         // Configure the cell.
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
-    Guideline *cellguide = [[sectionInfo objects] objectAtIndex:indexPath.row];
-    cell.textLabel.text = cellguide.title;
+    [self fetchedResultsController:[self fetchedResultsControllerForTableView:tableView] configureCell:cell atIndexPath:indexPath];
     return cell;
 }
 
@@ -146,9 +164,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fetchedResultsControllerForTableView:tableView] sections] objectAtIndex:indexPath.section];
     Guideline *selectedGuideline = (Guideline *)[[sectionInfo objects] objectAtIndex:indexPath.row];
-    
     detailObject = selectedGuideline;
     
 
@@ -166,91 +183,199 @@
     }
 }
 
-//-(NSArray *)loadMenu{
-   /* menuData = [[NSMutableArray alloc] init];
-    
-    [self parseXMLFileAtURL:@"http://openhealthcare.org.uk/guidelines.xml"];
-    */
-    
-   /* menuItems = [[NSArray alloc] initWithObjects:@"one",@"two",nil];
-    return menuItems;
-}*/
-
-/*- (void)parseXMLFileAtURL:(NSString *)URL
-{	*/
-    //you must then convert the path to a proper NSURL or it won't work
-   /* NSURL *xmlURL = [NSURL URLWithString:URL];
-	
-    // here, for some reason you have to use NSClassFromString when trying to alloc NSXMLParser, otherwise you will get an object not found error
-    // this may be necessary only for the toolchain
-    menuParser = [[NSXMLParser alloc] initWithContentsOfURL:xmlURL];
-	
-    // Set self as the delegate of the parser so that it will receive the parser delegate methods callbacks.
-    [menuParser setDelegate:self];
-	
-    // Depending on the XML document you're parsing, you may want to enable these features of NSXMLParser.
-    [menuParser setShouldProcessNamespaces:NO];
-    [menuParser setShouldReportNamespacePrefixes:NO];
-    [menuParser setShouldResolveExternalEntities:NO];
-	
-    [menuParser parse];*/
-	
-///}
-
-/*- (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
-	NSString * errorString = [NSString stringWithFormat:@"Unable to download story feed from web site (Error code %i )", [parseError code]];
-	
-	UIAlertView * errorAlert = [[[UIAlertView alloc] initWithTitle:@"Error loading content" message:errorString delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease];
-	[errorAlert show];
+//Method to return the fetchedResultsController to use based on comparing if the tableview is the actual table view or the search one
+-(NSFetchedResultsController *)fetchedResultsControllerForTableView:(UITableView *)tableView{
+    return tableView == self.tableView ? self.frc : self.searchfrc;
 }
 
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict{			
-	currentElement = [elementName copy];
-	if ([elementName isEqualToString:@"guideline"]) {
-        guideline = [[Guidelines alloc] init];
-		// clear out our story item caches...
-		guideline = [[Guidelines alloc] init];
-		currentTitle = [[NSMutableString alloc] init];
-		currentURL = [[NSMutableString alloc] init];
-	*/ /*currentCategory = [[NSMutableString alloc] init];
-		currentCode = [[NSMutableString alloc] init];
-        currentSubCat = [[NSMutableString alloc] init];*/ /*
-	}
-	
+// Method to put info into tableview cell based on the frc in use
+- (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController configureCell:(UITableViewCell *)theCell atIndexPath:(NSIndexPath *)theIndexPath{
+    
+    
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedResultsController sections] objectAtIndex:theIndexPath.section];
+    Guideline *cellguide = [[sectionInfo objects] objectAtIndex:theIndexPath.row];
+    theCell.textLabel.text = cellguide.title;
+    NSLog(@"title: %@", cellguide.title);
 }
 
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{     
-	if ([elementName isEqualToString:@"guideline"]) {
-		// save values to an item, then store that item into the array...
-		guideline.title = currentTitle;
-		guideline.url = currentURL;
-	*/	/*guideline.code = currentCode;
-        guideline.category = currentCategory;
-        guideline.subcategory = currentSubCat;*/ /*
-        
-		[menuData addObject:guideline];
-        
-        guideline = nil;
-        [currentTitle release];
-        [currentURL release];
-     */  /* [currentCode release];
-        [currentCategory release];
-        [currentSubCat release];*/ /*
-	}
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSInteger)scope
+{
+    NSLog(@"filter content for search text: %@", searchText);
+    self.savedSearchTerm = searchText;
+    
+  
+    if(searchText != nil){
+        NSLog(@"searching");
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"title contains[cd] %@", searchText];
+        [self.searchfrc.fetchRequest setPredicate:predicate];
+    }else{
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"All"];
+        [self.searchfrc.fetchRequest setPredicate:predicate];
+    }
+    NSLog(@"saerchfrc: %@", self.searchfrc);
+    
+    
+    
+    NSError *error = nil;
+    if(![self.searchfrc performFetch:&error]){
+        NSLog(@"error %@, %@", error, [error userInfo]);
+    }
+    
+    [self.searchDisplayController.searchResultsTableView reloadData];
 }
 
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string{
-	// save the characters for the current item...
-    
-    NSString *cleanString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
-	if ([currentElement isEqualToString:@"title"]) {
-		[currentTitle appendString:cleanString];
-	} else if ([currentElement isEqualToString:@"url"]) {
-		[currentURL appendString:cleanString];
-	}	
-}*/
+- (void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView;
+{
+}
 
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self filterContentForSearchText:searchString 
+                               scope:[self.searchDisplayController.searchBar selectedScopeButtonIndex]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+    NSLog(@"should reload table for search scope");
+    [self filterContentForSearchText:[self.searchDisplayController.searchBar text] 
+                               scope:[self.searchDisplayController.searchBar selectedScopeButtonIndex]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller 
+{
+    UITableView *tableView = controller == self.searchfrc ? self.tableView : self.searchDisplayController.searchResultsTableView;
+    [tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+    UITableView *tableView = controller == self.searchfrc ? self.tableView : self.searchDisplayController.searchResultsTableView;
+    
+    switch(type) 
+    {
+        case NSFetchedResultsChangeInsert:
+            [tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObjectatIndexPath:(NSIndexPath *)theIndexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+    
+    UITableView *tableView = controller == self.searchfrc ? self.tableView : self.searchDisplayController.searchResultsTableView;
+    switch(type) 
+    {
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:theIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+            [self fetchedResultsController:controller configureCell:[tableView cellForRowAtIndexPath:theIndexPath] atIndexPath:theIndexPath];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:theIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    UITableView *tableView = controller == self.frc ? self.tableView : self.searchDisplayController.searchResultsTableView;
+    [tableView endUpdates];
+}
+
+- (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString{
+    
+    NSArray *sortDescriptors = [NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]];
+    NSPredicate *filterPredicate = [[NSPredicate alloc] init]; // your predicate here
+    
+    /*
+     Set up the fetched results controller.
+     */
+    // Create the fetch request for the entity.
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    // Edit the entity name as appropriate.
+    NSEntityDescription *callEntity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:callEntity];
+    
+    NSMutableArray *predicateArray = [NSMutableArray array];
+    if(searchString.length)
+    {
+        // your search predicate(s) are added to this array
+        [predicateArray addObject:[NSPredicate predicateWithFormat:@"title CONTAINS[cd] %@", searchString]];
+        NSLog(@"array:%@",predicateArray);
+        // finally add the filter predicate for this view
+        if(filterPredicate)
+        {
+            filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filterPredicate, [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray], nil]];
+        }
+        else
+        {
+            filterPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
+        }
+    }
+    [fetchRequest setPredicate:filterPredicate];
+    
+    // Set the batch size to a suitable number.
+    [fetchRequest setFetchBatchSize:20];
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    // Edit the section name key path and cache name if appropriate.
+    // nil for section name key path means "no sections".
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext  sectionNameKeyPath:nil  cacheName:nil];
+    
+    aFetchedResultsController.delegate = self;
+    
+    [fetchRequest release];
+    
+    NSError *error = nil;
+    if (![aFetchedResultsController performFetch:&error]) 
+    {
+        /*
+         Replace this implementation with code to handle the error appropriately.
+         
+         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
+         */
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+    
+    return aFetchedResultsController;
+}    
+
+- (NSFetchedResultsController *)fetchedResultsController {
+    if (self.frc != nil) 
+    {
+        return self.frc;
+    }
+    self.frc = [self newFetchedResultsControllerWithSearch:nil];
+    return [[self.frc retain] autorelease];
+}   
+
+- (NSFetchedResultsController *)searchFetchedResultsController {
+    if (self.searchfrc != nil) 
+    {
+        return self.searchfrc;
+    }
+    self.searchfrc = [self newFetchedResultsControllerWithSearch:self.searchDisplayController.searchBar.text];
+    return [[self.searchfrc retain] autorelease];
+}
 
 @end
 
