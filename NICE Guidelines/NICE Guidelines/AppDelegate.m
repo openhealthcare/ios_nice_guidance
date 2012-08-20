@@ -116,6 +116,10 @@
         NSArray *controllers = [NSArray arrayWithObjects:masterNavigationController , cat, fav, nil];
         tabBarController.viewControllers = controllers;
         
+        masterNavigationController.tabBarItem.image = [UIImage imageNamed:@"33-cabinet.png"];
+        cat.tabBarItem.image = [UIImage imageNamed:@"15-tags.png"];
+        fav.tabBarItem.image = [UIImage imageNamed:@"108-badge.png"];
+        
         DetailViewController *detailViewController = [[[DetailViewController alloc] initWithNibName:@"DetailViewController_iPad" bundle:nil] autorelease];
         UINavigationController *detailNavigationController = [[[UINavigationController alloc] initWithRootViewController:detailViewController] autorelease];
         
