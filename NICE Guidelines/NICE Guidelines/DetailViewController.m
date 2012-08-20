@@ -62,6 +62,51 @@
         NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
         [web loadRequest:request];
     }
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [paths objectAtIndex:0];
+    NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];
+    
+    NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
+    
+    NSArray *favourites = [[NSArray alloc] initWithArray:[plist objectForKey:@"favourites"]];
+    
+    BOOL faved = NO;
+    for(NSString *fav in favourites){
+        if([name isEqualToString:fav]){
+            faved = YES;
+        }
+    }
+    [favourites release];
+    [plist release];
+
+       if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
+       
+        if(faved == YES){
+            favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleBordered target:self action:@selector(removeFavourite:)];
+        }else{
+            favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleDone target:self action:@selector(favourite:)];
+        }
+        
+        share = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStyleDone  target:self action:@selector(share:)];
+        
+        
+        if([UIPrintInteractionController isPrintingAvailable]){
+            print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleDone  target:self action:@selector(print:)];
+            NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
+            [self.navigationItem setRightBarButtonItems:buttonArray];
+            [buttonArray release];
+        }else{
+            NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share, nil];
+            [self.navigationItem setRightBarButtonItems:buttonArray];
+            [buttonArray release];
+        }
+       }else{
+           if(faved == YES){
+               favour.tintColor = [UIColor colorWithRed:0.4f green:0.4f blue:0.4f alpha:0.6f];
+           }else{
+               favour.tintColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
+           }
+       }
 }
 
 - (void)didReceiveMemoryWarning
@@ -78,24 +123,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
     
-    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
-        favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleDone target:self action:@selector(favourite:)];
     
-
-        share = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStyleDone  target:self action:@selector(share:)];
-    
-    
-        if([UIPrintInteractionController isPrintingAvailable]){
-            print = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStyleDone  target:self action:@selector(print:)];
-            NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share,print, nil];
-            [self.navigationItem setRightBarButtonItems:buttonArray];
-            [buttonArray release];
-        }else{
-            NSArray *buttonArray = [[NSArray alloc] initWithObjects:favourite,share, nil];
-            [self.navigationItem setRightBarButtonItems:buttonArray];
-            [buttonArray release];
-        }
-    }
 }
 
 - (void)viewDidUnload
@@ -171,14 +199,24 @@
     NSMutableArray *favList = [[NSMutableArray alloc] initWithArray:[plist objectForKey:@"favourites"]];
     
     BOOL check = NO;
+    NSUInteger position = 0;
+    NSUInteger favPos = 0;
     for(NSString *fav in favList){
         if([fav isEqualToString:name]){
+            favPos = position;
             check = YES;
         }
+        position++;
     }
     
     if(check == NO){
         [favList addObject:name];
+    }
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        if(check == YES){
+            [favList removeObjectAtIndex:favPos];
+        }
     }
     //need to save server date
     [plist setObject:favList forKey:@"favourites"];
@@ -187,7 +225,50 @@
     }else{
         NSLog(@"fail");
     }
+    [plist release];
+    [favList release];
+    [self configureView];
+}
 
+-(void)removeFavourite:(id)sender{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [paths objectAtIndex:0];
+    NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];
+    
+    NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
+    
+    NSMutableArray *favList = [[NSMutableArray alloc] initWithArray:[plist objectForKey:@"favourites"]];
+    
+    
+    NSUInteger position = 0;
+    NSUInteger favPos = 0;
+    BOOL check = NO;
+    for(NSString *fav in favList){
+        if([fav isEqualToString:name]){
+            favPos = position;
+            check = YES;
+        }
+        position++;
+    }
+    
+    
+    if(check == YES){
+        [favList removeObjectAtIndex:favPos];
+    }
+    
+    
+    NSArray *favLister = [[NSArray alloc] initWithArray:favList];
+    [plist setObject:favLister forKey:@"favourites"];
+    
+    if([plist writeToFile:path atomically:YES]){
+    }else{
+        NSLog(@"fail");
+    }
+    [favList release];
+    [favLister release];
+    [plist release];
+    [self configureView];
+    
 }
 
 -(IBAction)share:(id)sender{
@@ -233,7 +314,7 @@
         twitter.completionHandler = ^(TWTweetComposeViewControllerResult result) 
         {
             NSString *title = @"Tweet Status";
-            NSString *msg; 
+            NSString *msg = @"Tweeting"; 
             
             if (result == TWTweetComposeViewControllerResultCancelled)
                 msg = @"Tweet compostion was canceled.";
@@ -243,11 +324,14 @@
             // Show alert to see how things went...
             UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
             [alertView show];
+            [alertView release];
             
             // Dismiss the controller
             [self dismissModalViewControllerAnimated:YES];
         };
+        [twitter release];
     }
+    
 }
 - (void)mailComposeController:(MFMailComposeViewController*)mailController didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
     [self becomeFirstResponder];

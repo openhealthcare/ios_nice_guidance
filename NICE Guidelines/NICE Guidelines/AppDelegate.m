@@ -332,6 +332,7 @@
     [dateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss zzzz"];
     NSDate *serverD = [dateFormatter dateFromString:lastMod];
     server = [serverD copy];
+    [dateFormatter release];
     
     //Get current version date from user_info property list
     NSDictionary *user_info_dict = [NSDictionary dictionaryWithContentsOfFile:path];

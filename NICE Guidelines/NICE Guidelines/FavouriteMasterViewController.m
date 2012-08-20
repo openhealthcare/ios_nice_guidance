@@ -57,6 +57,9 @@
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"(title in %@)",favourites];
     [fetchRequest setPredicate:pred];
     
+    [plist release];
+    [favourites release];
+    
     NSError *frcErr;
     [frc performFetch:&frcErr];
     [fetchRequest release];
@@ -93,6 +96,9 @@
     
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"(title in %@)",favourites];
     [fetchRequest setPredicate:pred];
+    
+    [favourites release];
+    [plist release];
     
     NSError *err;
     [frc performFetch:&err];
@@ -132,7 +138,7 @@
     // Return the number of rows in the section.
     
     id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:0];
-    NSMutableArray *sectionGuides = [[NSMutableArray alloc] init];
+    NSMutableArray *sectionGuides = [[[NSMutableArray alloc] init] autorelease];
     
     NSString *deltaTitle = @"";
     for(Guideline *guide in [sectionInfo objects]){
@@ -171,7 +177,7 @@
     
     Guideline *guide = [cellGuides objectAtIndex:indexPath.row];
     cell.textLabel.text = guide.title;
-    
+    [cellGuides release];
     return cell;
 }
 
@@ -194,7 +200,7 @@
     Guideline *selectedGuideline = (Guideline *)[cellGuides objectAtIndex:indexPath.row];
     detailObject = selectedGuideline;
     
-    
+    [cellGuides release];
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    if (!self.detailViewController) {
@@ -222,6 +228,8 @@
         
         NSMutableArray *cellGuides = [[NSMutableArray alloc] init];
         
+        NSLog(@"number of faves: %i", [cellGuides count]);
+        
         NSString *deltaTitle = @"";
         for(Guideline *guide in [sectionInfo objects]){
             if([guide.title isEqualToString:deltaTitle]){
@@ -241,6 +249,8 @@
         }else{
             NSLog(@"fail");
         }
+        [cellGuides release];
+        [plist release];
         NSError *error = nil;
         [frc performFetch:&error];
         [self.table reloadData];

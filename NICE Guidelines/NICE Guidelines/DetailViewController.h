@@ -21,11 +21,13 @@
     UIBarButtonItem *share;
     UIBarButtonItem *favourite;
     NSString *name;
+    IBOutlet UIBarButtonItem *favour;
 }
 
 @property (strong, nonatomic) id detailItem;
 
 -(IBAction)favourite:(id)sender;
+-(void)removeFavourite:(id)sender;
 -(IBAction)share:(id)sender;
 -(IBAction)print:(id)sender;
 

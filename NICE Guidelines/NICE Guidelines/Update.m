@@ -55,6 +55,9 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
     [fetchRequest setEntity:entity];
     [fetchRequest setSortDescriptors:[NSArray arrayWithObjects:catsort,subsort,titlesort,nil]];
+    [catsort release];
+    [titlesort release];
+    [subsort release];
     NSError *error;
     
     //put that data into an array
@@ -130,6 +133,7 @@
         }
     }
     //Need to now save the timestamp to the user_info.plist file
+    [overwritables release];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDir = [paths objectAtIndex:0];
     NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];
@@ -143,6 +147,7 @@
     }else{
         [appDel finishedUpdates:nil];
     }
+    [plist release];
 }
 
 - (void)viewDidUnload

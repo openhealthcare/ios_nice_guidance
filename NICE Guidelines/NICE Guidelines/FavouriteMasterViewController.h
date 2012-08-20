@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DetailViewController.h"
 
-@interface FavouriteMasterViewController : UITableViewController{
+@interface FavouriteMasterViewController : UITableViewController<NSFetchedResultsControllerDelegate>{
     NSFetchedResultsController *frc;
     NSMutableArray *guidelines;
     NSFetchRequest *fetchRequest;

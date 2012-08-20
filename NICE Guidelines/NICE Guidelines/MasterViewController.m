@@ -78,15 +78,16 @@
     
     [fetchRequest setPredicate:pred];*/
     
-    self.frc = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:@"title.stringGroupByFirstInitial" cacheName:nil];
+    self.frc = [[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:@"title.stringGroupByFirstInitial" cacheName:nil] autorelease];
 
         
-    self.searchfrc = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    self.searchfrc = [[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil] autorelease];
 
     
     NSError *frcErr;
     [self.frc performFetch:&frcErr];
     
+    frcErr = nil;
     
     [fetchRequest release];
 }
@@ -145,7 +146,7 @@
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fetchedResultsControllerForTableView:tableView] sections] objectAtIndex:section];
     
-    NSMutableArray *sectionGuides = [[NSMutableArray alloc] init];
+    NSMutableArray *sectionGuides = [[[NSMutableArray alloc] init] autorelease];
     
     NSString *deltaTitle = @"";
     for(Guideline *guide in [sectionInfo objects]){
@@ -193,6 +194,7 @@
         
     }
     Guideline *selectedGuideline = (Guideline *)[sectionGuides objectAtIndex:indexPath.row];
+    [sectionGuides release];
     detailObject = selectedGuideline;
     
 
@@ -200,8 +202,10 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    if (!self.detailViewController) {
 	        self.detailViewController = [[[DetailViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil] autorelease];
+             self.detailViewController.hidesBottomBarWhenPushed = YES;
 	    }
         [self.detailViewController setDetailItem:detailObject];
+       
         [self.navigationController pushViewController:self.detailViewController animated:YES];
         self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
     }else{
@@ -232,6 +236,7 @@
         }
     }
     Guideline *cellguide = [sectionGuide objectAtIndex:theIndexPath.row];
+    [sectionGuide release];
     theCell.textLabel.text = cellguide.title;
 }
 
@@ -335,7 +340,7 @@
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString{
     
     NSArray *sortDescriptors = [NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]];
-    NSPredicate *filterPredicate = [[NSPredicate alloc] init]; // your predicate here
+    NSPredicate *filterPredicate = nil; // your predicate here
     
     /*
      Set up the fetched results controller.
@@ -363,7 +368,6 @@
         }
     }
     [fetchRequest setPredicate:filterPredicate];
-    
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
