@@ -11,7 +11,5 @@ The Mac OS X is used to convert the XML from the webserver into a .sqllite file 
 
 What's next?
 ------------
-
-- Tabbed Master view with a-z, category and favourite options
-- General UI sprucing up
+- Reload favourites table on deleting an item
 - Proper memory management review

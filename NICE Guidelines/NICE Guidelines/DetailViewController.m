@@ -56,6 +56,11 @@
         url = [[NSURL alloc] initWithString:guideline.url];
         NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
         [web loadRequest:request];
+    }else{
+        name = @"iPad";
+        url = [[NSURL alloc] initWithString:@"http://openhealthcare.org.uk/"];
+        NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
+        [web loadRequest:request];
     }
 }
 

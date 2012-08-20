@@ -86,6 +86,10 @@
         NSArray *controllers = [NSArray arrayWithObjects:self.navigationController , cat, fav, nil];
         tabBarController.viewControllers = controllers;
         
+        self.navigationController.tabBarItem.image = [UIImage imageNamed:@"33-cabinet.png"];
+        cat.tabBarItem.image = [UIImage imageNamed:@"15-tags.png"];
+        fav.tabBarItem.image = [UIImage imageNamed:@"108-badge.png"];
+        
         //set the root view controller to the nav controller
         self.window.rootViewController = tabBarController;//self.navigationController;
         

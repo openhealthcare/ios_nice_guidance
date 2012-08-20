@@ -9,7 +9,7 @@
 #import "FavouriteMasterViewController.h"
 
 @implementation FavouriteMasterViewController
-@synthesize managedObjectContext, detailViewController, detailObject, actuallyworksDetail;
+@synthesize managedObjectContext, detailViewController, detailObject, actuallyworksDetail, table;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -37,7 +37,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
     
     [fetchRequest setEntity:entity];
@@ -61,7 +61,7 @@
     [frc performFetch:&frcErr];
     [fetchRequest release];
     
-
+   
 }
 
 - (void)viewDidUnload
@@ -74,11 +74,29 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    
+    
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [paths objectAtIndex:0];
+    NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];
+    
+    NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
+    
+    NSArray *favourites = [[NSArray alloc] initWithArray:[plist objectForKey:@"favourites"]];
+    
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"(title in %@)",favourites];
+    [fetchRequest setPredicate:pred];
+    
+    NSError *err;
+    [frc performFetch:&err];
+    [self.table reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -130,6 +148,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"redoing cells");
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -187,6 +206,45 @@
     }else{
         [self.actuallyworksDetail setDetailItem:detailObject];
         
+    }
+}
+
+//Delete a table row
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(editingStyle == UITableViewCellEditingStyleDelete) {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDir = [paths objectAtIndex:0];
+        NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];
+        
+        NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
+        
+        id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
+        
+        NSMutableArray *cellGuides = [[NSMutableArray alloc] init];
+        
+        NSString *deltaTitle = @"";
+        for(Guideline *guide in [sectionInfo objects]){
+            if([guide.title isEqualToString:deltaTitle]){
+            }else{
+                [cellGuides addObject:guide.title];
+                deltaTitle = guide.title;
+            }
+        }
+        
+        [cellGuides removeObjectAtIndex:indexPath.row];
+        
+        NSLog(@"new favourites: %@", cellGuides);
+        
+        [plist setObject:cellGuides forKey:@"favourites"];
+        //need to save server date;
+        if([plist writeToFile:path atomically:YES]){
+        }else{
+            NSLog(@"fail");
+        }
+        NSError *error = nil;
+        [frc performFetch:&error];
+        [self.table reloadData];
+
     }
 }
 

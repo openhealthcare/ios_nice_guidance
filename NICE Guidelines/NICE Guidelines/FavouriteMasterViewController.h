@@ -10,12 +10,13 @@
 #import "DetailViewController.h"
 
 @interface FavouriteMasterViewController : UITableViewController{
-    IBOutlet UITableView *table;
     NSFetchedResultsController *frc;
     NSMutableArray *guidelines;
+    NSFetchRequest *fetchRequest;
 }
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property (strong, nonatomic) DetailViewController *actuallyworksDetail;
 @property (strong, nonatomic)id detailObject;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, assign) IBOutlet UITableView *table;
 @end
