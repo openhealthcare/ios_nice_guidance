@@ -13,6 +13,8 @@
 #import "DetailViewController.h"
 #import "Reachability.h"
 #import "Update.h"
+#import "CategoryMasterViewController.h"
+#import "FavouriteMasterViewController.h"
 
 @implementation AppDelegate
 
@@ -57,31 +59,82 @@
     updates = [[NSData alloc] init];
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    
+    
+    
+    
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        
+        UITabBarController *tabBarController = [[UITabBarController alloc] init];
+        tabBarController.delegate = self;
+        
+        //If the user iterface is for the iPhone we only load the mast view
         MasterViewController *masterViewController = [[[MasterViewController alloc] initWithNibName:@"MasterViewController_iPhone" bundle:nil] autorelease];
+        
+        CategoryMasterViewController *catViewController = [[[CategoryMasterViewController alloc] initWithNibName:@"CategoryMasterViewController_iPhone" bundle:nil] autorelease];
+        
+        FavouriteMasterViewController *favViewController = [[[FavouriteMasterViewController alloc] initWithNibName:@"MasterViewController_iPhone" bundle:nil] autorelease];
+        
+        //set up the nav controller
         self.navigationController = [[[UINavigationController alloc] initWithRootViewController:masterViewController] autorelease];
-        self.window.rootViewController = self.navigationController;
+        
+        UINavigationController *cat = [[[UINavigationController alloc] initWithRootViewController:catViewController] autorelease];
+        
+        UINavigationController *fav = [[[UINavigationController alloc] initWithRootViewController:favViewController] autorelease];
+        
+        NSArray *controllers = [NSArray arrayWithObjects:self.navigationController , cat, fav, nil];
+        tabBarController.viewControllers = controllers;
+        
+        //set the root view controller to the nav controller
+        self.window.rootViewController = tabBarController;//self.navigationController;
+        
+        //pass the managedObjectContext to the masterview so we can use it there
         masterViewController.managedObjectContext = self.managedObjectContext;
+        catViewController.managedObjectContext = self.managedObjectContext;
+        favViewController.managedObjectContext = self.managedObjectContext;
+        
+        
     } else {
+        UITabBarController *tabBarController = [[UITabBarController alloc] init];
+        tabBarController.delegate = self;
+        
         MasterViewController *masterViewController = [[[MasterViewController alloc] initWithNibName:@"MasterViewController_iPad" bundle:nil] autorelease];
+        
+        CategoryMasterViewController *catViewController = [[[CategoryMasterViewController alloc] initWithNibName:@"CategoryMasterViewController_iPad" bundle:nil] autorelease];
+        
+        FavouriteMasterViewController *favViewController = [[[FavouriteMasterViewController alloc] initWithNibName:@"MasterViewController_iPad" bundle:nil] autorelease];
+        
         UINavigationController *masterNavigationController = [[[UINavigationController alloc] initWithRootViewController:masterViewController] autorelease];
+        UINavigationController *cat = [[[UINavigationController alloc] initWithRootViewController:catViewController] autorelease];
+        UINavigationController *fav = [[[UINavigationController alloc] initWithRootViewController:favViewController] autorelease];
+        
+        NSArray *controllers = [NSArray arrayWithObjects:masterNavigationController , cat, fav, nil];
+        tabBarController.viewControllers = controllers;
         
         DetailViewController *detailViewController = [[[DetailViewController alloc] initWithNibName:@"DetailViewController_iPad" bundle:nil] autorelease];
         UINavigationController *detailNavigationController = [[[UINavigationController alloc] initWithRootViewController:detailViewController] autorelease];
         
         masterViewController.actuallyworksDetail = detailViewController;
+        catViewController.actuallyworksDetail = detailViewController;
+        favViewController.actuallyworksDetail = detailViewController;
     	
         self.splitViewController = [[[UISplitViewController alloc] init] autorelease];
         self.splitViewController.delegate = detailViewController;
-        self.splitViewController.viewControllers = [NSArray arrayWithObjects:masterNavigationController, detailNavigationController, nil];
+        self.splitViewController.viewControllers = [NSArray arrayWithObjects:tabBarController, detailNavigationController, nil];
         
         self.window.rootViewController = self.splitViewController;
        masterViewController.managedObjectContext = self.managedObjectContext;
+        catViewController.managedObjectContext = self.managedObjectContext;
+        favViewController.managedObjectContext = self.managedObjectContext;
     }
     
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item{
+    NSLog(@"selecting item");
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

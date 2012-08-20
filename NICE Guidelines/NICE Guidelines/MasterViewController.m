@@ -19,7 +19,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"NICE Guidelines", @"NICE Guidelines");
+        self.title = NSLocalizedString(@"A - Z", @"A - Z");
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             self.clearsSelectionOnViewWillAppear = NO;
             self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
@@ -156,8 +156,6 @@
         }
 
     }
-    
-    NSLog(@"sectioninfo: %i, sectionGuides: %i", [[sectionInfo objects] count], [sectionGuides count]);
     return [sectionGuides count];
 }
 
@@ -239,19 +237,16 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSInteger)scope
 {
-    NSLog(@"filter content for search text: %@", searchText);
     self.savedSearchTerm = searchText;
     
   
     if(searchText != nil){
-        NSLog(@"searching");
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"title contains[cd] %@", searchText];
         [self.searchfrc.fetchRequest setPredicate:predicate];
     }else{
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"All"];
         [self.searchfrc.fetchRequest setPredicate:predicate];
     }
-    NSLog(@"saerchfrc: %@", self.searchfrc);
     
     
     
@@ -278,7 +273,6 @@
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
 {
-    NSLog(@"should reload table for search scope");
     [self filterContentForSearchText:[self.searchDisplayController.searchBar text] 
                                scope:[self.searchDisplayController.searchBar selectedScopeButtonIndex]];
     

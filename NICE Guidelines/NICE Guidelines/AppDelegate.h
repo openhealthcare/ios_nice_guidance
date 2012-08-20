@@ -10,7 +10,7 @@
 @class Reachability;
 @class Update;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>{
+@interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>{
     Reachability *hostReachable;
     BOOL hostActive, newDataAvailable;
     NSURLConnection *updateConnection;
