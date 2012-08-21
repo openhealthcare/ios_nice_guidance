@@ -150,6 +150,7 @@
         [self.actuallyworksDetail setDetailItem:detailObject];
         
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

@@ -177,6 +177,7 @@
         [self.actuallyworksDetail setDetailItem:detailObject];
         
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 //Delete a table row

@@ -212,6 +212,7 @@
         [self.actuallyworksDetail setDetailItem:detailObject];
         
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 //Method to return the fetchedResultsController to use based on comparing if the tableview is the actual table view or the search one
