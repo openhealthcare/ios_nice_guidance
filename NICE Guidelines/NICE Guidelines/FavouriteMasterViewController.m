@@ -37,6 +37,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    
+   
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    
+    
+    
+}
+-(NSMutableArray *)data{
+    
     fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Guideline" inManagedObjectContext:managedObjectContext];
     
@@ -64,45 +86,26 @@
     [frc performFetch:&frcErr];
     [fetchRequest release];
     
-   
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:0];
+    NSMutableArray *sectionGuides = [[[NSMutableArray alloc] init] autorelease];
     
-    
-    
-    
+    NSString *deltaTitle = @"";
+    for(Guideline *guide in [sectionInfo objects]){
+        if([guide.title isEqualToString:deltaTitle]){
+        }else{
+            [sectionGuides addObject:guide];
+            deltaTitle = guide.title;
+        }
+        
+    }
+    NSMutableArray *data = [[[NSMutableArray alloc] initWithArray:sectionGuides] autorelease];
+    return data;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [self refresh];
     [super viewDidAppear:animated];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDir = [paths objectAtIndex:0];
-    NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];
-    
-    NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
-    
-    NSArray *favourites = [[NSArray alloc] initWithArray:[plist objectForKey:@"favourites"]];
-    
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"(title in %@)",favourites];
-    [fetchRequest setPredicate:pred];
-    
-    [favourites release];
-    [plist release];
-    
-    NSError *err;
-    [frc performFetch:&err];
-    [self.table reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -137,19 +140,7 @@
 {
     // Return the number of rows in the section.
     
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:0];
-    NSMutableArray *sectionGuides = [[[NSMutableArray alloc] init] autorelease];
-    
-    NSString *deltaTitle = @"";
-    for(Guideline *guide in [sectionInfo objects]){
-        if([guide.title isEqualToString:deltaTitle]){
-        }else{
-            [sectionGuides addObject:guide];
-            deltaTitle = guide.title;
-        }
-        
-    }
-    return [sectionGuides count];
+        return [[self data] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -162,22 +153,8 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
-    NSMutableArray *cellGuides = [[NSMutableArray alloc] init];
-    
-    NSString *deltaTitle = @"";
-    for(Guideline *guide in [sectionInfo objects]){
-        if([guide.title isEqualToString:deltaTitle]){
-        }else{
-            [cellGuides addObject:guide];
-            deltaTitle = guide.title;
-        }
-    }
-    
-    
-    Guideline *guide = [cellGuides objectAtIndex:indexPath.row];
+    Guideline *guide = [[self data] objectAtIndex:indexPath.row];
     cell.textLabel.text = guide.title;
-    [cellGuides release];
     return cell;
 }
 
@@ -185,26 +162,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{ 
     
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
-    
-    NSMutableArray *cellGuides = [[NSMutableArray alloc] init];
-    
-    NSString *deltaTitle = @"";
-    for(Guideline *guide in [sectionInfo objects]){
-        if([guide.title isEqualToString:deltaTitle]){
-        }else{
-            [cellGuides addObject:guide];
-            deltaTitle = guide.title;
-        }
-    }
-    Guideline *selectedGuideline = (Guideline *)[cellGuides objectAtIndex:indexPath.row];
+    Guideline *selectedGuideline = (Guideline *)[[self data]objectAtIndex:indexPath.row];
     detailObject = selectedGuideline;
-    
-    [cellGuides release];
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    if (!self.detailViewController) {
 	        self.detailViewController = [[[DetailViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil] autorelease];
+            self.detailViewController.hidesBottomBarWhenPushed = YES;
 	    }
         [self.detailViewController setDetailItem:detailObject];
         [self.navigationController pushViewController:self.detailViewController animated:YES];
@@ -218,20 +182,19 @@
 //Delete a table row
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if(editingStyle == UITableViewCellEditingStyleDelete) {
+        
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDir = [paths objectAtIndex:0];
         NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];
         
         NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
         
-        id <NSFetchedResultsSectionInfo> sectionInfo = [[frc sections] objectAtIndex:indexPath.section];
-        
         NSMutableArray *cellGuides = [[NSMutableArray alloc] init];
         
         NSLog(@"number of faves: %i", [cellGuides count]);
         
         NSString *deltaTitle = @"";
-        for(Guideline *guide in [sectionInfo objects]){
+        for(Guideline *guide in [self data]){
             if([guide.title isEqualToString:deltaTitle]){
             }else{
                 [cellGuides addObject:guide.title];
@@ -240,8 +203,7 @@
         }
         
         [cellGuides removeObjectAtIndex:indexPath.row];
-        
-        NSLog(@"new favourites: %@", cellGuides);
+        [[self data] removeObjectAtIndex:indexPath.row];
         
         [plist setObject:cellGuides forKey:@"favourites"];
         //need to save server date;
@@ -253,8 +215,22 @@
         [plist release];
         NSError *error = nil;
         [frc performFetch:&error];
-        [self.table reloadData];
+        [self refresh];
+        NSLog(@"reloaded should show: %@", [self data]);
 
+    }
+}
+
+- (void)refresh {
+    if([NSThread isMainThread])
+    {
+        [self.tableView reloadData];
+        [self.tableView setNeedsLayout];
+        [self.tableView setNeedsDisplay];
+    }
+    else 
+    {
+        [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:YES];
     }
 }
 

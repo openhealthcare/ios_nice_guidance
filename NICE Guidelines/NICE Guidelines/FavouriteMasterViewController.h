@@ -19,4 +19,6 @@
 @property (strong, nonatomic)id detailObject;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, assign) IBOutlet UITableView *table;
+-(NSMutableArray *)data;
+-(void)refresh;
 @end

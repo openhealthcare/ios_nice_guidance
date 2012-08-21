@@ -141,6 +141,7 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    if (!self.detailViewController) {
 	        self.detailViewController = [[[DetailViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil] autorelease];
+            self.detailViewController.hidesBottomBarWhenPushed = YES;
 	    }
         [self.detailViewController setDetailItem:detailObject];
         [self.navigationController pushViewController:self.detailViewController animated:YES];
