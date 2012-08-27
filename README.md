@@ -8,8 +8,3 @@ The iOS app is contained within the 'NICE Guidelines' folder. Fire up the xCode 
 Mac OS X app
 ------------
 The Mac OS X is used to convert the XML from the webserver into a .sqllite file that can be dropped into the app to pre-populate the core data model. Load the app in Xcode and build and run it. The .sqlite file will be in the ~/Library/XML to SQLLite/ folder of your Mac's boot volume.
-
-What's next?
-------------
-- Reload favourites table on deleting an item
-- Proper memory management review
