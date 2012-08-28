@@ -3,7 +3,7 @@
 //  NICE Guidelines
 //
 //  Created by Colin Wren on 05/08/2012.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 OpenHealthCare UK. All rights reserved.
 //
 
 #import "Guideline.h"

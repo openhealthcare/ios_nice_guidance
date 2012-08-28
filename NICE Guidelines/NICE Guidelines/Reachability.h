@@ -42,6 +42,7 @@
  APPLE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  Copyright (C) 2010 Apple Inc. All Rights Reserved.
+ OpenHealthCare UK
  
 */
 
