@@ -70,70 +70,34 @@
     
     
     items = [xmlI sortedArrayUsingDescriptors:[NSArray arrayWithObjects:catsort, subsort, titlesort, nil]];
-    NSEnumerator* importIterator = [items objectEnumerator];
-    NSEnumerator* objectIterator = [currentItems objectEnumerator];
-    NSString *thisImportIdentifier = [importIterator nextObject];
-    NSManagedObject *thisObject = [objectIterator nextObject];
-    NSArray *overwritables = [[NSArray alloc] initWithObjects:@"url",@"code",@"category",@"subcategory", nil];
-    NSUInteger currentInt = 0;
-    progress.progress = 0;
-    // Loop through both lists, comparing identifiers, until both are empty
-    while (thisImportIdentifier || thisObject) {
-        // Compare identifiers
-        NSComparisonResult comparison;
-        if (!thisImportIdentifier) {  // If the import list has run out, the import identifier sorts last (i.e. remove remaining objects)
-            comparison = NSOrderedDescending;
-        } else if (!thisObject) {  // If managed object list has run out, the import identifier sorts first (i.e. add remaining objects)
-            comparison = NSOrderedAscending;
-        } else {  // If neither list has run out, compare with the object
-            comparison = [[thisImportIdentifier valueForKey:@"title"] compare:[thisObject valueForKey:@"title"]];
-        }
-        if (comparison == NSOrderedSame) {  // Identifiers match
-            
-            if (overwritables) {  // Merge the allowed non-identifier properties, if not nil
-                NSDictionary *importAttributes = [items objectAtIndex:currentInt];
-                NSDictionary *overwriteAttributes = [NSDictionary dictionaryWithObjects:[importAttributes objectsForKeys:overwritables notFoundMarker:@""] forKeys:overwritables];
-                
-                [thisObject setValuesForKeysWithDictionary:overwriteAttributes];
-                NSError *error;
-                if(![self.managedObjectContext save:&error]){
-                    NSLog(@"error saving updated object: %@ %@", error, [error localizedDescription]);
-                }
-            }
-            
-            // Move ahead in both lists 
-           
-    
-            thisObject = [objectIterator nextObject];
-            thisImportIdentifier = [importIterator nextObject];
-            currentInt++;
-            progress.progress = (currentInt / [items count]);
-       } else if (comparison == NSOrderedAscending) {  // Imported item sorts before stored item
-            
-            // The imported item is previously unseen - add it and move ahead to the next import identifier
-            
-            NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:@"Guidelines" inManagedObjectContext:self.managedObjectContext];
-            [newObject setValue:[thisImportIdentifier valueForKey:@"title"] forKey:@"title"];
-            [newObject setValue:[thisImportIdentifier valueForKey:@"url"] forKey:@"url"];
-            [newObject setValue:[thisImportIdentifier valueForKey:@"code"] forKey:@"code"];
-            [newObject setValue:[thisImportIdentifier valueForKey:@"category"] forKey:@"category"];
-            [newObject setValue:[thisImportIdentifier valueForKey:@"subcategory"] forKey:@"subcategory"];
-            //[newObject setValuesForKeysWithDictionary:[items objectAtIndex:currentInt]];
-            thisImportIdentifier = [importIterator nextObject];
-            currentInt++;
-            progress.progress = (currentInt / [items count]);
-        } else {  // Imported item sorts after stored item
-            
-            // The stored item is not among those imported, and should be removed, then move ahead to the next stored item
-            
-            [self.managedObjectContext deleteObject:thisObject];
-            thisObject = [objectIterator nextObject];
-            currentInt++;
-            progress.progress = (currentInt / [items count]);
-        }
+    for(NSManagedObject *thisObj in currentItems){
+        [self.managedObjectContext deleteObject:thisObj];
     }
-    //Need to now save the timestamp to the user_info.plist file
-    [overwritables release];
+    
+    if(![self.managedObjectContext save:&error]){
+        NSLog(@"handle error for not being able to delete existing data");
+    }
+    
+    progress.progress = 0.5;
+    
+    for(NSDictionary *dict in items){
+        Guideline *newGuide = [NSEntityDescription insertNewObjectForEntityForName:@"Guideline" inManagedObjectContext:self.managedObjectContext];
+        newGuide.title = [dict objectForKey:@"title"];
+        newGuide.code = [dict objectForKey:@"code"];
+        newGuide.category = [dict objectForKey:@"category"];
+        newGuide.subcategory = [dict objectForKey:@"subcat"];
+        newGuide.url = [dict objectForKey:@"url"];
+    }
+    
+    if(![self.managedObjectContext save:&error]){
+        UIAlertView *ohno = [[UIAlertView alloc] initWithTitle:@"Error updating" message:@"There was an error while saving the new guideline data" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:@"", nil];
+        [ohno show];
+        [ohno release];
+    }
+    
+    progress.progress = 1.0;
+    
+    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDir = [paths objectAtIndex:0];
     NSString *path = [documentsDir stringByAppendingPathComponent:@"user_info.plist"];

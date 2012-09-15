@@ -13,7 +13,7 @@
 @implementation MasterViewController
 
 @synthesize detailViewController = _detailViewController;
-@synthesize detailObject, actuallyworksDetail, managedObjectContext,frc, searchfrc, searchWasActive, savedSearchTerm, searchController;
+@synthesize detailObject, actuallyworksDetail, managedObjectContext,frc, searchfrc, searchWasActive, savedSearchTerm, searchController, table;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -74,10 +74,6 @@
     
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
     
-   /* NSPredicate *pred = [NSPredicate predicateWithFormat:@"title unique"];
-    
-    [fetchRequest setPredicate:pred];*/
-    
     self.frc = [[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:@"title.stringGroupByFirstInitial" cacheName:nil] autorelease];
 
         
@@ -102,6 +98,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self refresh];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -413,6 +410,21 @@
     }
     self.searchfrc = [self newFetchedResultsControllerWithSearch:self.searchDisplayController.searchBar.text];
     return [[self.searchfrc retain] autorelease];
+}
+- (void)refresh {
+    NSLog(@"running refresh");
+    if([NSThread isMainThread])
+    {
+        NSError *frcErr;
+        [self.frc performFetch:&frcErr];
+        [self.tableView reloadData];
+        [self.tableView setNeedsLayout];
+        [self.tableView setNeedsDisplay];
+    }
+    else 
+    {
+        [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:YES];
+    }
 }
 
 @end

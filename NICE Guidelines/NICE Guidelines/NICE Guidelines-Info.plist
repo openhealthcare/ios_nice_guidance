@@ -29,7 +29,7 @@
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>Open-Health-Care-UK.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>uk.org.openhealthcare.nice</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

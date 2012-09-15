@@ -29,6 +29,8 @@
 @property (nonatomic, assign) NSString *savedSearchTerm;
 @property (nonatomic, assign) BOOL searchWasActive;
 @property (nonatomic, retain) UISearchDisplayController *searchController;
+@property (nonatomic, retain) IBOutlet UITableView *table;
 -(NSFetchedResultsController *)fetchedResultsControllerForTableView:(UITableView *)tableView;
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController configureCell:(UITableViewCell *)theCell atIndexPath:(NSIndexPath *)theIndexPath;
+- (void)refresh;
 @end

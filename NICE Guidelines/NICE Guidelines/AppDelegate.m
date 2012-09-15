@@ -70,11 +70,11 @@
         tabBarController.delegate = self;
         
         //If the user iterface is for the iPhone we only load the mast view
-        MasterViewController *masterViewController = [[[MasterViewController alloc] initWithNibName:@"MasterViewController_iPhone" bundle:nil] autorelease];
+        masterViewController = [[[MasterViewController alloc] initWithNibName:@"MasterViewController_iPhone" bundle:nil] autorelease];
         
-        CategoryMasterViewController *catViewController = [[[CategoryMasterViewController alloc] initWithNibName:@"CategoryMasterViewController_iPhone" bundle:nil] autorelease];
+        catViewController = [[[CategoryMasterViewController alloc] initWithNibName:@"CategoryMasterViewController_iPhone" bundle:nil] autorelease];
         
-        FavouriteMasterViewController *favViewController = [[[FavouriteMasterViewController alloc] initWithNibName:@"MasterViewController_iPhone" bundle:nil] autorelease];
+        favViewController = [[[FavouriteMasterViewController alloc] initWithNibName:@"MasterViewController_iPhone" bundle:nil] autorelease];
         
         //set up the nav controller
         self.navigationController = [[[UINavigationController alloc] initWithRootViewController:masterViewController] autorelease];
@@ -103,11 +103,11 @@
         UITabBarController *tabBarController = [[UITabBarController alloc] init];
         tabBarController.delegate = self;
         
-        MasterViewController *masterViewController = [[[MasterViewController alloc] initWithNibName:@"MasterViewController_iPad" bundle:nil] autorelease];
+        masterViewController = [[[MasterViewController alloc] initWithNibName:@"MasterViewController_iPad" bundle:nil] autorelease];
         
-        CategoryMasterViewController *catViewController = [[[CategoryMasterViewController alloc] initWithNibName:@"CategoryMasterViewController_iPad" bundle:nil] autorelease];
+        catViewController = [[[CategoryMasterViewController alloc] initWithNibName:@"CategoryMasterViewController_iPad" bundle:nil] autorelease];
         
-        FavouriteMasterViewController *favViewController = [[[FavouriteMasterViewController alloc] initWithNibName:@"MasterViewController_iPad" bundle:nil] autorelease];
+       favViewController = [[[FavouriteMasterViewController alloc] initWithNibName:@"MasterViewController_iPad" bundle:nil] autorelease];
         
         UINavigationController *masterNavigationController = [[[UINavigationController alloc] initWithRootViewController:masterViewController] autorelease];
         UINavigationController *cat = [[[UINavigationController alloc] initWithRootViewController:catViewController] autorelease];
@@ -394,5 +394,8 @@
     [update.view removeFromSuperview];
     [update release];
     update = nil;
+    [masterViewController refresh];
+    [favViewController refresh];
+    [catViewController refresh];
 }
 @end

@@ -17,4 +17,5 @@
 @property (strong, nonatomic) DetailViewController *actuallyworksDetail;
 @property (strong, nonatomic)id detailObject;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+- (void)refresh;
 @end

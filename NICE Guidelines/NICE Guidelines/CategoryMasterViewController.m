@@ -152,5 +152,16 @@
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
+- (void)refresh {
+    if([NSThread isMainThread])
+    {
+        [self.tableView reloadData];
+        [self.tableView setNeedsLayout];
+        [self.tableView setNeedsDisplay];
+    }
+    else 
+    {
+        [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:YES];
+    }
+}
 @end
