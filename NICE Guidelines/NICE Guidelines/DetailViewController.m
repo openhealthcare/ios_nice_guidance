@@ -49,7 +49,27 @@
         //self.detailDescriptionLabel.text = [self.detailItem description];
         Guideline *guideline = (Guideline *)self.detailItem;
         
+        
+        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
         self.navigationItem.title = guideline.title;
+        }else{
+                UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 280, 44)] autorelease];      
+                label.backgroundColor = [UIColor clearColor];
+                label.numberOfLines = 2;
+                label.font = [UIFont boldSystemFontOfSize:14.0];       
+                label.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];       
+                label.textAlignment = UITextAlignmentCenter;  
+                label.lineBreakMode = UILineBreakModeWordWrap;
+                label.textColor = [UIColor whiteColor]; // change this color      
+                self.navigationItem.titleView = label;          
+                label.text = guideline.title;       
+                [label sizeToFit];   
+            
+        }
+        
+        
+        
+        
         name = guideline.title;
         
         
@@ -285,7 +305,7 @@
             MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
             NSString *subjectToWrite = [NSString stringWithFormat:@"NICE Guideline -  %@", name];
             [mfViewController setSubject:subjectToWrite];
-            NSString *bodyToWrite = [NSString stringWithFormat:@"<p>I've just read the NICE Guidelines on <strong> %@ </strong> using Open Health Care UK's NICE Guidelines app for iPhone and iPad. You can read can read it at <a href=\"%@\">%@</a></p>", name, url, url];
+            NSString *bodyToWrite = [NSString stringWithFormat:@"<p>I've just read the NICE Guidelines on <strong> %@ </strong> using Open Health Care UK's NICE Guidelines app for iPhone and iPad. You can read it at <a href=\"%@\">%@</a></p>", name, url, url];
             [mfViewController setMessageBody:bodyToWrite isHTML:YES];
             mfViewController.mailComposeDelegate = self;
             

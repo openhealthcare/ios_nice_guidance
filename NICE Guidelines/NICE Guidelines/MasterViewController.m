@@ -62,7 +62,7 @@
     
     if(self.savedSearchTerm){
         [self.searchDisplayController setActive:self.searchWasActive];
-        [self.searchDisplayController.searchBar setText:savedSearchTerm];
+        [self.searchDisplayController.searchBar setText:self.savedSearchTerm];
         
         self.savedSearchTerm = nil;
     }
@@ -220,6 +220,7 @@
 // Method to put info into tableview cell based on the frc in use
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController configureCell:(UITableViewCell *)theCell atIndexPath:(NSIndexPath *)theIndexPath{
     
+    NSLog(@"this is updating the ting when it says update");
     
     id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedResultsController sections] objectAtIndex:theIndexPath.section];
     
@@ -242,13 +243,14 @@
 {
     self.savedSearchTerm = searchText;
     
+   // NSLog(@"returning searchText: %@", searchText);
   
     if(searchText != nil){
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"title contains[cd] %@", searchText];
         [self.searchfrc.fetchRequest setPredicate:predicate];
     }else{
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"All"];
-        [self.searchfrc.fetchRequest setPredicate:predicate];
+        //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"All title"];
+        //[self.searchfrc.fetchRequest setPredicate:predicate];
     }
     
     
@@ -263,6 +265,7 @@
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView;
 {
+    //NSLog(@"when is this fired");
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
@@ -282,15 +285,25 @@
     // Return YES to cause the search result table view to be reloaded.
     return YES;
 }
+- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller{
+    //NSLog(@"Doing the search bar controller ting");
+    //[self filterContentForSearchText:nil scope:0];
+    NSLog(@"searching for: %@",controller.searchBar.text);
+    //searchController.active = NO;
+}
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller 
 {
-    UITableView *tableView = controller == self.searchfrc ? self.tableView : self.searchDisplayController.searchResultsTableView;
+    NSLog(@"searching active on contecnt change: %d", searchController.active);
+    UITableView *tableView = controller == self.searchfrc ? self.searchDisplayController.searchResultsTableView : self.tableView;
     [tableView beginUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    UITableView *tableView = controller == self.searchfrc ? self.tableView : self.searchDisplayController.searchResultsTableView;
+    
+    
+    
+    UITableView *tableView = controller == self.searchfrc ? self.searchDisplayController.searchResultsTableView : self.tableView;
     
     switch(type) 
     {
@@ -307,7 +320,7 @@
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObjectatIndexPath:(NSIndexPath *)theIndexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
-    UITableView *tableView = controller == self.searchfrc ? self.tableView : self.searchDisplayController.searchResultsTableView;
+    UITableView *tableView = controller == self.searchfrc ? self.searchDisplayController.searchResultsTableView : self.tableView;
     switch(type) 
     {
         case NSFetchedResultsChangeInsert:
@@ -331,9 +344,12 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    NSLog(@"content changed");
     UITableView *tableView = controller == self.frc ? self.tableView : self.searchDisplayController.searchResultsTableView;
     [tableView endUpdates];
 }
+
+
 
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString{
     
@@ -354,18 +370,18 @@
     {
         // your search predicate(s) are added to this array
         [predicateArray addObject:[NSPredicate predicateWithFormat:@"title CONTAINS[cd] %@", searchString]];
-        NSLog(@"array:%@",predicateArray);
         // finally add the filter predicate for this view
         if(filterPredicate)
         {
             filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filterPredicate, [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray], nil]];
+            [fetchRequest setPredicate:filterPredicate];
         }
         else
         {
-            filterPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
+            //filterPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
         }
     }
-    [fetchRequest setPredicate:filterPredicate];
+    
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
@@ -395,12 +411,12 @@
 }    
 
 - (NSFetchedResultsController *)fetchedResultsController {
-    if (self.frc != nil) 
-    {
+   // if (self.frc != nil) 
+   // {
         return self.frc;
-    }
-    self.frc = [self newFetchedResultsControllerWithSearch:nil];
-    return [[self.frc retain] autorelease];
+   // }
+   // self.frc = [self newFetchedResultsControllerWithSearch:nil];
+   // return [[self.frc retain] autorelease];
 }   
 
 - (NSFetchedResultsController *)searchFetchedResultsController {
@@ -412,14 +428,17 @@
     return [[self.searchfrc retain] autorelease];
 }
 - (void)refresh {
-    NSLog(@"running refresh");
+   // NSLog(@"running refresh");
     if([NSThread isMainThread])
     {
-        NSError *frcErr;
-        [self.frc performFetch:&frcErr];
-        [self.tableView reloadData];
-        [self.tableView setNeedsLayout];
-        [self.tableView setNeedsDisplay];
+        if(!searchWasActive){
+           // NSError *frcErr;
+            //[self.frc performFetch:&frcErr];
+            [self newFetchedResultsControllerWithSearch:nil];
+            [self.tableView reloadData];
+            [self.tableView setNeedsLayout];
+            [self.tableView setNeedsDisplay];
+        }
     }
     else 
     {
