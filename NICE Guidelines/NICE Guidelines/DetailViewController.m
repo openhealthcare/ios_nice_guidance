@@ -50,23 +50,9 @@
         Guideline *guideline = (Guideline *)self.detailItem;
         
         
-        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
+
         self.navigationItem.title = guideline.title;
-        }else{
-                UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 280, 44)] autorelease];      
-                label.backgroundColor = [UIColor clearColor];
-                label.numberOfLines = 2;
-                label.font = [UIFont boldSystemFontOfSize:14.0];       
-                label.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];       
-                label.textAlignment = UITextAlignmentCenter;  
-                label.lineBreakMode = UILineBreakModeWordWrap;
-                label.textColor = [UIColor whiteColor]; // change this color      
-                self.navigationItem.titleView = label;          
-                label.text = guideline.title;       
-                [label sizeToFit];   
-            
-        }
-        
+                
         
         
         
