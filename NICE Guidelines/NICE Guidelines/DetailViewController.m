@@ -49,10 +49,45 @@
         //self.detailDescriptionLabel.text = [self.detailItem description];
         Guideline *guideline = (Guideline *)self.detailItem;
         
+        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+        CGRect frame;
+        UIColor *textColor;
+        UITextAlignment textAlign;
         
-
-        self.navigationItem.title = guideline.title;
-                
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            
+            textColor = [UIColor whiteColor];
+            textAlign = UITextAlignmentCenter;
+            self.navigationItem.rightBarButtonItem = nil;
+            
+                if(orientation == UIDeviceOrientationPortrait){
+                    frame = CGRectMake(0, 0, 210, 44);
+                    NSLog(@"portrait");
+                }else if(orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight){
+                    frame = CGRectMake(0, 0, 400, 44);
+                    NSLog(@"landscape");
+                }else{
+                    frame = CGRectMake(0, 0, 210, 44);
+                    NSLog(@"neither");
+                }
+            
+            UILabel *label = [[[UILabel alloc] initWithFrame:frame] autorelease];
+            label.numberOfLines = 2;
+            label.backgroundColor = [UIColor clearColor];
+            label.font = [UIFont boldSystemFontOfSize:14.0];
+            label.shadowColor = [UIColor grayColor];
+            label.textAlignment = textAlign;
+            label.lineBreakMode = UILineBreakModeWordWrap;
+            label.lineBreakMode = UILineBreakModeTailTruncation;
+            label.textColor = textColor;
+            label.text = guideline.title;
+            self.navigationItem.titleView = label;
+        
+        }else{
+            self.navigationItem.title = guideline.title;
+        }
+        
+        
         
         
         
@@ -88,7 +123,7 @@
        if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
        
         if(faved == YES){
-            favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleBordered target:self action:@selector(removeFavourite:)];
+            favourite = [[UIBarButtonItem alloc] initWithTitle:@"Unfavourite" style:UIBarButtonItemStyleDone target:self action:@selector(removeFavourite:)];
         }else{
             favourite = [[UIBarButtonItem alloc] initWithTitle:@"Favourite" style:UIBarButtonItemStyleDone target:self action:@selector(favourite:)];
         }
@@ -108,9 +143,9 @@
         }
        }else{
            if(faved == YES){
-               favour.tintColor = [UIColor colorWithRed:0.4f green:0.4f blue:0.4f alpha:0.6f];
+               favour.image = [UIImage imageNamed:@"removefav.png"];
            }else{
-               favour.tintColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
+               favour.image = [UIImage imageNamed:@"addfav.png"];
            }
        }
 }

@@ -231,7 +231,6 @@
 // Method to put info into tableview cell based on the frc in use
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController configureCell:(UITableViewCell *)theCell atIndexPath:(NSIndexPath *)theIndexPath{
     
-    NSLog(@"this is updating the ting when it says update");
     
     id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedResultsController sections] objectAtIndex:theIndexPath.section];
     
@@ -299,13 +298,12 @@
 - (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller{
     //NSLog(@"Doing the search bar controller ting");
     //[self filterContentForSearchText:nil scope:0];
-    NSLog(@"searching for: %@",controller.searchBar.text);
+ 
     //searchController.active = NO;
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller 
 {
-    NSLog(@"searching active on contecnt change: %d", searchController.active);
     UITableView *tableView = controller == self.searchfrc ? self.searchDisplayController.searchResultsTableView : self.tableView;
     [tableView beginUpdates];
 }
