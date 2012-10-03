@@ -154,6 +154,9 @@
         cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:14.0f];
         cell.textLabel.numberOfLines = 0;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
     }
     
     Guideline *guide = [[self data] objectAtIndex:indexPath.row];
