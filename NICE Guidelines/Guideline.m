@@ -16,5 +16,6 @@
 @dynamic title;
 @dynamic subcategory;
 @dynamic url;
+@dynamic download_date;
 
 @end

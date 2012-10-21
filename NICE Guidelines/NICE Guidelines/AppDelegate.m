@@ -394,7 +394,13 @@
     [update.view removeFromSuperview];
     [update release];
     update = nil;
-    [masterViewController refresh];
+    if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
+        [masterViewController postUpdateRefresh];
+    }else{
+        UITabBarController *tabs = (UITabBarController *)[self.splitViewController.viewControllers objectAtIndex:0]; 
+        UINavigationController *nav = (UINavigationController *) [tabs.viewControllers objectAtIndex:0];
+        [[nav.viewControllers objectAtIndex:0] postUpdateRefresh];
+    }
     [favViewController refresh];
     [catViewController refresh];
 }

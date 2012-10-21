@@ -17,6 +17,7 @@
 
 @synthesize detailItem = _detailItem;
 @synthesize masterPopoverController = _masterPopoverController;
+@synthesize managedObjectContext;
 
 - (void)dealloc
 {
@@ -49,6 +50,8 @@
         //self.detailDescriptionLabel.text = [self.detailItem description];
         Guideline *guideline = (Guideline *)self.detailItem;
         
+        NSLog(@"download_date: %@", guideline.download_date);
+        
         UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
         CGRect frame;
         UIColor *textColor;
@@ -62,13 +65,10 @@
             
                 if(orientation == UIDeviceOrientationPortrait){
                     frame = CGRectMake(0, 0, 210, 44);
-                    NSLog(@"portrait");
                 }else if(orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight){
                     frame = CGRectMake(0, 0, 400, 44);
-                    NSLog(@"landscape");
                 }else{
                     frame = CGRectMake(0, 0, 210, 44);
-                    NSLog(@"neither");
                 }
             
             UILabel *label = [[[UILabel alloc] initWithFrame:frame] autorelease];
@@ -87,20 +87,74 @@
             self.navigationItem.title = guideline.title;
         }
         
+        if(!guideline.download_date){
+            guideline.download_date = [NSDate date];
         
         
+            NSError *error = nil;
+            if(![self.managedObjectContext save:&error]){
+                NSLog(@"failed to save detailItem %@, %@", error, [error userInfo]);
+                abort();
+            }
+            url = [[NSURL alloc] initWithString:guideline.url];
+            NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60.0f] autorelease];
+            [web loadRequest:request];
+        }else{
+            //Compare them dates 
+            
+            //grab the download_date
+            NSDate *storeDate = guideline.download_date;
+            
+            //grab todays date
+            NSDate *todayDate = [NSDate date];
+            NSDate *thirtyDaysLater = [todayDate dateByAddingTimeInterval:60*60*24*30];
+            NSLog(@"30 days time: %@", thirtyDaysLater);
+            
+            
+            //if more than 30 days old load from the web
+            NSComparisonResult compareDates = [thirtyDaysLater compare:storeDate];
+            if(compareDates == NSOrderedDescending){
+                NSLog(@"Loading old data");
+                //The dates in the future so no need to reload
+                url = [[NSURL alloc] initWithString:guideline.url];
+                NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60.0f] autorelease];
+                [web loadRequest:request];
+            }else{
+                NSLog(@"loading new data");
+                //The dates in the past or is today so need to reload, set the date in guideline and save
+                url = [[NSURL alloc] initWithString:guideline.url];
+                NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:60.0f] autorelease];
+                [web loadRequest:request]; 
+                
+                
+                guideline.download_date = [NSDate date];
+                
+                
+                NSError *error = nil;
+                if(![self.managedObjectContext save:&error]){
+                    NSLog(@"failed to save detailItem %@, %@", error, [error userInfo]);
+                    abort();
+                }
+                
+                
+                
+            }
+            
+            
+        }
+
         
         
         name = guideline.title;
         
         
-        url = [[NSURL alloc] initWithString:guideline.url];
-        NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
-        [web loadRequest:request];
+       
+        
+        
     }else{
         name = @"iPad";
         url = [[NSURL alloc] initWithString:@"http://openhealthcare.org.uk/"];
-        NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
+        NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0f] autorelease];
         [web loadRequest:request];
     }
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

@@ -97,8 +97,9 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
     [self refresh];
+    [super viewWillAppear:animated];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -212,12 +213,16 @@
 	        self.detailViewController = [[[DetailViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil] autorelease];
              self.detailViewController.hidesBottomBarWhenPushed = YES;
 	    }
+        self.detailViewController.managedObjectContext = self.managedObjectContext;
         [self.detailViewController setDetailItem:detailObject];
+        
        
         [self.navigationController pushViewController:self.detailViewController animated:YES];
         self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
     }else{
+        self.actuallyworksDetail.managedObjectContext = self.managedObjectContext;
         [self.actuallyworksDetail setDetailItem:detailObject];
+        
         
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -441,8 +446,25 @@
     if([NSThread isMainThread])
     {
         if(!searchWasActive){
-           // NSError *frcErr;
-            //[self.frc performFetch:&frcErr];
+            [self newFetchedResultsControllerWithSearch:nil];
+            [self.tableView reloadData];
+            [self.tableView setNeedsLayout];
+            [self.tableView setNeedsDisplay];
+        }
+    }
+    else 
+    {
+        [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:YES];
+    }
+}
+
+- (void)postUpdateRefresh {
+    // NSLog(@"running refresh");
+    if([NSThread isMainThread])
+    {
+        if(!searchWasActive){
+            NSError *frcErr;
+            [self.frc performFetch:&frcErr];
             [self newFetchedResultsControllerWithSearch:nil];
             [self.tableView reloadData];
             [self.tableView setNeedsLayout];

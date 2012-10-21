@@ -77,6 +77,7 @@
 		7E620BF315C8AD37002CE045 /* 211-action@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "211-action@2x.png"; sourceTree = SOURCE_ROOT; };
 		7E620BF415C8AD37002CE045 /* 212-action2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "212-action2.png"; sourceTree = SOURCE_ROOT; };
 		7E620BF515C8AD37002CE045 /* action2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = action2.png; sourceTree = SOURCE_ROOT; };
+		7E7DF3EF163497A500CA1644 /* Guidelines 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Guidelines 2.xcdatamodel"; sourceTree = "<group>"; };
 		7E8874A315E4226A00AFAA9E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
 		7E8874A615E4229100AFAA9E /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
 		7E8874A815E422A100AFAA9E /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait~ipad.png"; path = "../Default-Portrait~ipad.png"; sourceTree = "<group>"; };
@@ -492,9 +493,10 @@
 		7E1E765915CDD3CA00EAC734 /* Guidelines.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				7E7DF3EF163497A500CA1644 /* Guidelines 2.xcdatamodel */,
 				7E1E765A15CDD3CA00EAC734 /* Guidelines.xcdatamodel */,
 			);
-			currentVersion = 7E1E765A15CDD3CA00EAC734 /* Guidelines.xcdatamodel */;
+			currentVersion = 7E7DF3EF163497A500CA1644 /* Guidelines 2.xcdatamodel */;
 			name = Guidelines.xcdatamodeld;
 			path = "NICE Guidelines/Guidelines.xcdatamodeld";
 			sourceTree = "<group>";

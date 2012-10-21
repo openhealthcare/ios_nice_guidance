@@ -25,6 +25,7 @@
 }
 
 @property (strong, nonatomic) id detailItem;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 -(IBAction)favourite:(id)sender;
 -(void)removeFavourite:(id)sender;

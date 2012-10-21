@@ -17,5 +17,6 @@
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * subcategory;
 @property (nonatomic, retain) NSString * url;
+@property (nonatomic, retain) NSDate *download_date;
 
 @end

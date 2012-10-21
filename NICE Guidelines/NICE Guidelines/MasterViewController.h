@@ -33,4 +33,5 @@
 -(NSFetchedResultsController *)fetchedResultsControllerForTableView:(UITableView *)tableView;
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController configureCell:(UITableViewCell *)theCell atIndexPath:(NSIndexPath *)theIndexPath;
 - (void)refresh;
+- (void)postUpdateRefresh;
 @end
