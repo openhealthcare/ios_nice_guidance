@@ -121,7 +121,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:14.0f];
         cell.textLabel.numberOfLines = 0;
-        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
@@ -138,7 +138,7 @@
     NSString *cellText = @"Chronic fatigue syndrome / myalgic encephalomyelitis (or encephalopathy)";
     UIFont *cellFont = [UIFont fontWithName:@"Helvetica" size:14.0];
     CGSize constraintSize = CGSizeMake(280.0f, MAXFLOAT);
-    CGSize labelSize = [cellText sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
+    CGSize labelSize = [cellText sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:NSLineBreakByWordWrapping];
     
     return labelSize.height + 32;
 }

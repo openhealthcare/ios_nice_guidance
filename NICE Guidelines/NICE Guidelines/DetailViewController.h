@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
-#import <Twitter/Twitter.h>
+#import <Social/Social.h>
 #import "Guideline.h"
 
 @class MasterViewController;

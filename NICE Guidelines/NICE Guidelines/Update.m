@@ -19,9 +19,20 @@
         if(managedObjectContext == nil){
             managedObjectContext = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
         }
+       NSLog(@"updateData before");
         if(updateData == nil){
-            updateData = [[NSData alloc] initWithData:updates];
+            NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+            
+            if ([[vComp objectAtIndex:0] intValue] >= 7) {
+                // iOS-7 code[current] or greater
+                updateData = updates;//[NSData dataWithData:updates];
+            } else if ([[vComp objectAtIndex:0] intValue] < 7) {
+                // iOS-6 code
+                updateData = [[NSData alloc] initWithData:updates];
+            }
+            
         }
+        NSLog(@"updateData after");
         if(serverDate == nil){
             serverDate = [[NSDate alloc] init];
             serverDate = server;
@@ -45,7 +56,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     continueButton.enabled = NO;
-    
+    NSLog(@"view loaded");
     //Set up sort descriptors for organising the data
     NSSortDescriptor *catsort = [[NSSortDescriptor alloc] initWithKey:@"category" ascending:YES];
     NSSortDescriptor *subsort = [[NSSortDescriptor alloc] initWithKey:@"subcategory" ascending: YES];
@@ -68,8 +79,10 @@
     xmlI = [[NSMutableArray alloc] init];
     [self parseXMLData:updateData];
     
+    NSLog(@"after parsing XML");
     
     items = [xmlI sortedArrayUsingDescriptors:[NSArray arrayWithObjects:catsort, subsort, titlesort, nil]];
+    NSLog(@"deleting the items");
     for(NSManagedObject *thisObj in currentItems){
         [self.managedObjectContext deleteObject:thisObj];
     }
@@ -80,6 +93,8 @@
     
     progress.progress = 0.5;
     
+    NSLog(@"before saving");
+    
     for(NSDictionary *dict in items){
         Guideline *newGuide = [NSEntityDescription insertNewObjectForEntityForName:@"Guideline" inManagedObjectContext:self.managedObjectContext];
         newGuide.title = [dict objectForKey:@"title"];
@@ -88,6 +103,8 @@
         newGuide.subcategory = [dict objectForKey:@"subcat"];
         newGuide.url = [dict objectForKey:@"url"];
     }
+    
+    NSLog(@"after saving");
     
     if(![self.managedObjectContext save:&error]){
         UIAlertView *ohno = [[UIAlertView alloc] initWithTitle:@"Error updating" message:@"There was an error while saving the new guideline data" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:@"", nil];
@@ -127,6 +144,7 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 -(void)parseXMLData:(NSData *)xmlData{
+    NSLog(@"parsing data");
     items = [[NSMutableArray alloc] init];
     parser = [[NSXMLParser alloc] initWithData:xmlData];
     [parser setDelegate:self];
@@ -174,6 +192,7 @@
         [xmlItem setObject:category forKey:@"category"];
         [xmlItem setObject:subcat forKey:@"subcategory"];
         [xmlI addObject:xmlItem];
+        NSLog(@"XML:%@", xmlI);
         /*[title release];
         [url release];
         [code release];

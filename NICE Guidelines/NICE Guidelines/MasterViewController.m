@@ -171,7 +171,7 @@
         }
         cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:14.0f];
         cell.textLabel.numberOfLines = 0;
-        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
         // Configure the cell.
     [self fetchedResultsController:[self fetchedResultsControllerForTableView:tableView] configureCell:cell atIndexPath:indexPath];
@@ -183,7 +183,7 @@
     NSString *cellText = @"Chronic fatigue syndrome / myalgic encephalomyelitis (or encephalopathy)";
     UIFont *cellFont = [UIFont fontWithName:@"Helvetica" size:14.0];
     CGSize constraintSize = CGSizeMake(280.0f, MAXFLOAT);
-    CGSize labelSize = [cellText sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
+    CGSize labelSize = [cellText sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:NSLineBreakByWordWrapping];
     
     return labelSize.height + 32;
 }
@@ -332,7 +332,7 @@
 }
 
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObjectatIndexPath:(NSIndexPath *)theIndexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)theIndexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
     UITableView *tableView = controller == self.searchfrc ? self.searchDisplayController.searchResultsTableView : self.tableView;
     switch(type) 

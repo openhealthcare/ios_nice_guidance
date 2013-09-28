@@ -30,6 +30,7 @@
 
 - (void)setDetailItem:(id)newDetailItem
 {
+    [web loadHTMLString:nil baseURL:nil];
     if (_detailItem != newDetailItem) {
         [_detailItem release]; 
         _detailItem = [newDetailItem retain]; 
@@ -55,12 +56,17 @@
         UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
         CGRect frame;
         UIColor *textColor;
-        UITextAlignment textAlign;
+        NSTextAlignment textAlign;
         
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
             
-            textColor = [UIColor whiteColor];
-            textAlign = UITextAlignmentCenter;
+            if ([[vComp objectAtIndex:0] intValue] < 7) {
+                // iOS-6 code
+                textColor = [UIColor whiteColor];
+            }
+            
+            textAlign = NSTextAlignmentCenter;
             self.navigationItem.rightBarButtonItem = nil;
             
                 if(orientation == UIDeviceOrientationPortrait){
@@ -75,11 +81,15 @@
             label.numberOfLines = 2;
             label.backgroundColor = [UIColor clearColor];
             label.font = [UIFont boldSystemFontOfSize:14.0];
-            label.shadowColor = [UIColor grayColor];
             label.textAlignment = textAlign;
-            label.lineBreakMode = UILineBreakModeWordWrap;
-            label.lineBreakMode = UILineBreakModeTailTruncation;
-            label.textColor = textColor;
+            label.lineBreakMode = NSLineBreakByWordWrapping;
+            label.lineBreakMode = NSLineBreakByTruncatingTail;
+            if ([[vComp objectAtIndex:0] intValue] < 7) {
+                // iOS-6 code
+                label.textColor = textColor;
+                label.shadowColor = [UIColor grayColor];
+            }
+            
             label.text = guideline.title;
             self.navigationItem.titleView = label;
         
@@ -96,6 +106,7 @@
                 NSLog(@"failed to save detailItem %@, %@", error, [error userInfo]);
                 abort();
             }
+           
             url = [[NSURL alloc] initWithString:guideline.url];
             NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60.0f] autorelease];
             [web loadRequest:request];
@@ -216,6 +227,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [web loadHTMLString:nil baseURL:nil];
     [self configureView];
     
     
@@ -240,6 +252,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [web loadHTMLString:nil baseURL:nil];
 	[super viewWillDisappear:animated];
 }
 
@@ -384,7 +397,7 @@
             [mfViewController setMessageBody:bodyToWrite isHTML:YES];
             mfViewController.mailComposeDelegate = self;
             
-            [self presentModalViewController:mfViewController animated:YES];
+            [self presentViewController:mfViewController animated:YES completion:nil];
             [mfViewController release];
         }else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
@@ -395,42 +408,40 @@
     }
     if(buttonIndex == 1){
         // Create the view controller
-        TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
-        
-        // Optional: set an image, url and initial text
-        //[twitter addImage:[UIImage imageNamed:@"iOSDevTips.png"]];
-        [twitter addURL:url];
-        [twitter setInitialText:[NSString stringWithFormat:@"NICE Guideline on %@",name]];
-        
-        // Show the controller
-        [self presentModalViewController:twitter animated:YES];
-        
-        // Called when the tweet dialog has been closed
-        twitter.completionHandler = ^(TWTweetComposeViewControllerResult result) 
-        {
-            NSString *title = @"Tweet Status";
-            NSString *msg = @"Tweeting"; 
             
-            if (result == TWTweetComposeViewControllerResultCancelled)
-                msg = @"Tweet compostion was canceled.";
-            else if (result == TWTweetComposeViewControllerResultDone)
-                msg = @"Tweet composition completed.";
+            SLComposeViewController *controller = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
             
-            // Show alert to see how things went...
-            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-            [alertView show];
-            [alertView release];
+            SLComposeViewControllerCompletionHandler myBlock = ^(SLComposeViewControllerResult result){
+                if (result == SLComposeViewControllerResultCancelled) {
+                    
+                    NSLog(@"Cancelled");
+                    
+                } else
+                    
+                {
+                    NSLog(@"Done");
+                }
+                
+                [controller dismissViewControllerAnimated:YES completion:Nil];
+            };
+            controller.completionHandler =myBlock;
             
-            // Dismiss the controller
-            [self dismissModalViewControllerAnimated:YES];
-        };
-        [twitter release];
+            //Adding the Text to the facebook post value from iOS
+            [controller setInitialText:[NSString stringWithFormat:@"NICE Guideline on %@",name]];
+            
+            //Adding the URL to the facebook post value from iOS
+            
+            [controller addURL:url];
+            
+            
+            [self presentViewController:controller animated:YES completion:Nil];
+
     }
     
 }
 - (void)mailComposeController:(MFMailComposeViewController*)mailController didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
     [self becomeFirstResponder];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(IBAction)print:(id)sender{

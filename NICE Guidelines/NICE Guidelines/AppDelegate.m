@@ -56,7 +56,15 @@
     //update if file moves URL
     [hostReachable startNotifier];
     
-    updates = [[NSData alloc] init];
+    NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+    
+    if ([[vComp objectAtIndex:0] intValue] >= 7) {
+        // iOS-7 code[current] or greater
+        updates = nil;
+    } else if ([[vComp objectAtIndex:0] intValue] < 7) {
+        // iOS-6 code
+        updates = [[NSData alloc] init];
+    }
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
@@ -315,6 +323,7 @@
     //Check for the updated data async
     NSURLRequest *updateData = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.openhealthcare.org.uk/guidelines.xml"] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:60.0];
     updateConnection = [[NSURLConnection alloc] initWithRequest:updateData delegate:self];
+    NSLog(@"data:%@ connection: %@", updateData, updateConnection);
     if(updateConnection){
         updatedData = [[NSMutableData data] retain];
         newDataAvailable = NO;
@@ -322,6 +331,7 @@
 }
 //deal with all the connection mumbo jumbo
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    NSLog(@"receieved response");
     //Grab the header from the response
     NSHTTPURLResponse *hr = (NSHTTPURLResponse *)response;
     NSDictionary *dict = [hr allHeaderFields];
@@ -338,6 +348,8 @@
     NSDictionary *user_info_dict = [NSDictionary dictionaryWithContentsOfFile:path];
     NSDate *currentVersion = [user_info_dict valueForKey:@"current_version"];
     
+    NSLog(@"serverDate:%@ phoneDate:%@", server, currentVersion);
+    
     //Compare with date from user_info 
     if([currentVersion compare:server] == NSOrderedAscending){
         //This means that there is new data
@@ -349,10 +361,12 @@
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    NSLog(@"received some data");
     [updatedData appendData:data];
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
+    NSLog(@"FAILED to get data");
 }
 
 //If the connection has finished loading
@@ -360,7 +374,10 @@
     [connection release];
     if(newDataAvailable){
         //Do the update stuff as new data is available
-        [updates initWithData:updatedData];
+        
+        updates = [NSData dataWithData:updatedData];
+        //NSLog(@"new data was available and now updating %@", updates);
+        
         UIAlertView *updateMessage = [[UIAlertView alloc] initWithTitle:@"Updates available" message:@"There is a newer version of the NICE guidelines list. Press Update to download" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Update", nil];
         [updateMessage show];
         [updateMessage release];
@@ -369,8 +386,9 @@
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(buttonIndex == 1){
         //The user pressed update so now we will run the script to update the information
-         if(update == nil){
-             update = [[Update alloc] initWithNibName:@"Update" bundle:[NSBundle mainBundle] updateData:updates serverDate:server];
+        NSLog(@"before calling UPDATE view:%@", updatedData);
+        if(update == nil){
+             update = [[Update alloc] initWithNibName:@"Update" bundle:[NSBundle mainBundle] updateData:updatedData serverDate:server];
         }
         CGFloat width, height;
         if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
@@ -383,8 +401,10 @@
         CGFloat xaxis = (self.window.frame.size.width / 2) - (width / 2);
         CGFloat yaxis = (self.window.frame.size.height / 2) - (height / 2);
         CGRect frame = CGRectMake(xaxis, yaxis, width, height);
-        update.view.frame = frame;	
-        update.updateData = updates;
+        update.view.frame = frame;
+        NSLog(@"before setting property");
+        update.updateData = updatedData;
+        NSLog(@"after setting property");
         update.appDel = self;
         update.managedObjectContext = self.managedObjectContext;
         [self.window insertSubview:update.view aboveSubview:self.window.rootViewController.view];
